@@ -39,6 +39,17 @@ export class RSA {
         return this.crypt.getKey().encrypt(json)
     }
 
+    /** takes a string in hex format, uses the private key of the user to decrypt; in case of error returns false */
+    receiveFromServer(hex: string) {
+        try {
+            this.crypt.setKey(this.private_key)
+            return this.crypt.getKey().decrypt(hex);
+        }
+        catch (ex) {
+            return false;
+        }
+    }
+
     /** @return a promise with the key */
     getPubKey() {
         if (this.loaded) {
