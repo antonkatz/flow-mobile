@@ -4,7 +4,8 @@ import { IonicApp, IonicModule, IonicErrorHandler } from 'ionic-angular';
 import { MyApp } from './app.component';
 import { HomePage } from '../pages/home/home';
 import {RegisterPage} from "../pages/register/register";
-import {Registration} from "../providers/my-data"
+import {Registration} from "../providers/registration"
+import {ServerComms} from "../providers/server-comms";
 
 @NgModule({
   declarations: [
@@ -21,6 +22,6 @@ import {Registration} from "../providers/my-data"
     HomePage,
     RegisterPage
   ],
-  providers: [{provide: ErrorHandler, useClass: IonicErrorHandler}, Storage, Registration]
+  providers: [{provide: ErrorHandler, useClass: IonicErrorHandler}, Storage, Registration, ServerComms]
 })
 export class AppModule {}

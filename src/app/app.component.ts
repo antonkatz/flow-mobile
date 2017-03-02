@@ -6,7 +6,7 @@ import { Storage } from '@ionic/storage';
 import {HomePage} from '../pages/home/home';
 import {RegisterPage} from "../pages/register/register";
 import {RSA} from "./utils/rsa"
-import {Registration} from "../providers/my-data"
+import {Registration} from "../providers/registration"
 
 @Component({
     templateUrl: 'app.html'
@@ -19,9 +19,7 @@ export class MyApp {
             // Okay, so the platform is ready and our plugins are available.
             // Here you can do any higher level native things you might need.
 
-            let rsa = new RSA(storage)
-            rsa.hasKeyStored().then((registered) => {
-                if (registered) {
+                if (registration.isRegistered()) {
                     this.rootPage = HomePage;
                 } else {
                     this.rootPage = RegisterPage;
@@ -30,7 +28,6 @@ export class MyApp {
                 StatusBar.styleDefault();
                 Splashscreen.hide();
 
-            })
         });
     }
 }
