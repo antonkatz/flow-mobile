@@ -1,0 +1,55 @@
+<ion-content padding class="content">
+
+    <p id="balance">
+        <button ion-button color="secondary" outline>one hour <span class="note">for friends</span></button>
+        <span class="help"><ion-icon name="help-circle"></ion-icon></span>
+    </p>
+
+    <p text-center>
+        <button ion-button color="primary">offer help</button>
+    </p>
+
+    <p id="offers">
+        <ion-list-header>
+            offers to you
+            <ion-icon class="help" name="help-circle"></ion-icon>
+        </ion-list-header>
+        <ion-list>
+            <ion-item *ngFor="let offer of offers">
+                <ion-avatar item-left>
+                    <img src="https://cdn.vectorstock.com/i/composite/30,97/flat-business-man-user-profile-avatar-icon-vector-4333097.jpg"/>
+                </ion-avatar>
+
+    <p>
+        <span class="user-name">{{offer.userName}}</span>
+        <span class="amount">{{displayAmount(offer.amount)}}</span>
+        <br/>
+        <span>to help with watering</span>
+    </p>
+
+
+    <p class="options">
+        <button ion-button color="secondary" outline>accept</button>
+        <button ion-button color="danger" outline>reject</button>
+    </p>
+    </ion-item>
+    </ion-list>
+    </p>
+
+    <ion-card>
+        <ion-card-header>
+            what is Flow
+        </ion-card-header>
+        <ion-card-content>
+            flow is
+        </ion-card-content>
+    </ion-card>
+    <ion-card>
+        <ion-card-header>
+            how to use Flow
+        </ion-card-header>
+        <ion-card-content>
+            to use do this and that
+        </ion-card-content>
+    </ion-card>
+</ion-content>

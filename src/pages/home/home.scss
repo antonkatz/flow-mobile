@@ -1,0 +1,61 @@
+page-home {
+  #balance {
+    margin-top: 0;
+    text-align: center;
+  }
+  #balance .help {
+    margin-left: 0.3em;
+    //color: color($colors, secondary);
+    color: floralwhite;
+    vertical-align: text-top;
+    line-height: 2em;
+  }
+  #balance .note {
+    margin-left: 1em;
+    color: #869635;
+  }
+  ion-icon {
+    //font-size: 1em;
+    opacity: 0.7;
+  }
+  #offers {
+    margin-top:2em;
+  }
+  #offers .amount {
+    color: color($app-colors, balance);
+    float: right;
+  }
+  #offers ion-item {
+    background: #171e1f;
+    color: color($app-colors, text);
+  }
+  #offers .item-inner {
+    border-color: rgba(255, 255, 255, 0.3);
+  }
+  #offers ion-list-header {
+    font-size: 1.5em;
+    background: #171e1f;
+    color: color($app-colors, header);
+    margin-bottom: 0;
+  }
+  .list-header-md {
+    border-top: none;
+  }
+  #offers .help {
+    font-size: 0.7em;
+    margin-left: 0.7em;
+  }
+  #offers .user-name {
+    color: color($app-colors, text);
+  }
+  #offers .options button {
+    float: right;
+  }
+
+  ion-card {
+    background: #2f3e40 !important;
+  }
+  ion-card-header {
+    color: color($app-colors, header) !important;
+  }
+}
