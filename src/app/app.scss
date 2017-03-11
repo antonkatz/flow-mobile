@@ -18,7 +18,7 @@
 $app-colors: (
         balance: #869635,
         text: whitesmoke,
-        header: rgba(255, 255, 255, 0.55),
+        header: rgba(255, 255, 255, 0.71),
         bg: #171e1f
 );
 
@@ -35,4 +35,10 @@ $app-colors: (
 .item {
   background-color: rgba(255, 255, 255, 0.08) !important;
   color: inherit !important;
+}
+
+.error-toast .toast-wrapper {
+  //border: 1px solid color($colors, danger);
+  box-shadow: 0 0 10px 2px color($colors, danger);
+  border-top: none;
 }

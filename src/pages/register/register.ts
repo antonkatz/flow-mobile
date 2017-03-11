@@ -1,7 +1,6 @@
 import {Component} from '@angular/core';
 import {NavController, NavParams} from 'ionic-angular';
-import {Storage} from '@ionic/storage';
-import {RSA} from '../../app/utils/rsa'
+import {Registration} from "../../providers/registration";
 
 /*
  Generated class for the Register page.
@@ -16,6 +15,10 @@ import {RSA} from '../../app/utils/rsa'
 })
 export class RegisterPage {
 
-    constructor(public navCtrl: NavController, public navParams: NavParams, storage: Storage) {
+    constructor(public navCtrl: NavController, public navParams: NavParams, public registrar: Registration) {
+    }
+
+    register(desired_name: string, invitation_code: string) {
+        this.registrar.register(desired_name, invitation_code)
     }
 }

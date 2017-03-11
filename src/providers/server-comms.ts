@@ -65,17 +65,34 @@ export class ServerComms {
       let config: RequestOptionsArgs = {headers : new Headers(headers)}
       let ebody = ServerComms.rsa.parseForServer(payload)
       return this.http.post(url, ebody, config).map(response => {
+        console.log("Mapping was done on response")
         ServerComms.setSymmetricKey(ServerComms.extractSymmetricKey(response))
         return ServerComms.parseSymmetricallyEncrypted(response)
+      }).catch((error: Response | any) => {
+          console.log("Catching was done on response", error)
+          let parsed_error = {}
+          if (error instanceof Response) {
+            ServerComms.setSymmetricKey(ServerComms.extractSymmetricKey(error))
+            console.log("sym key", ServerComms.symmetric_key)
+            let body = ServerComms.parseSymmetricallyEncrypted(error)
+            parsed_error = body
+            // parsed_error = {"error_code": body["error_code"] || "", "error_msg": body["error_msg"] || "" }
+          } else {
+            parsed_error = {"error_code": "unknown_error" || "",
+              "error_msg": "something went wrong and we don't know what happened" }
+            console.log("unknown error during comms that is not a response", error)
+          }
+          return Observable.throw(parsed_error)
+        })
       })
-    })
-  }
+    }
 
   private static extractSymmetricKey(response: Response): Uint8Array {
     // encrypted symmetric key in hex
     let eskh = response.headers.get("sym_key")
     // decrypted symmetric key in hex
     let dskh = ServerComms.rsa.parseFromServer(eskh)
+    console.log("decrypted keey", dskh)
     return aesjs.utils.hex.toBytes(dskh)
   }
 
@@ -88,9 +105,10 @@ export class ServerComms {
     let aes = new aesjs.ModeOfOperation.cbc(ServerComms.symmetric_key, iv);
     let dbytes = aes.decrypt(data)
     // removing padding
-    dbytes = dbytes.filter(v => {return v != 16})
+    dbytes = dbytes.filter(v => {return v > 31})
     let dstr = aesjs.utils.utf8.fromBytes(dbytes)
     console.log("decrypted string", dstr)
+    console.log("bytes", dbytes)
     return JSON.parse(dstr)
   }
 
@@ -107,6 +125,7 @@ export class ServerComms {
     } else {
       a = new Uint8Array(payload)
     }
-    return payload.length < (RSA.key_bits / 8)
+    // return payload.length < (RSA.key_bits / 8)
+    return a.length < RSA.key_bits
   }
 }

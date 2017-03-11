@@ -44,9 +44,11 @@ export class RSA {
     parseFromServer(hex: string) {
         try {
             this.crypt.setKey(this.private_key)
+            console.log("private key", this.private_key)
             return this.crypt.getKey().decrypt(hex);
         }
         catch (ex) {
+            console.log("error while decrypting publicly encrypted message from server", ex)
             return false;
         }
     }

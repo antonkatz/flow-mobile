@@ -16,17 +16,21 @@ export class MyApp {
 
     constructor(platform: Platform, storage: Storage, registration: Registration) {
         platform.ready().then(() => {
+          console.log("platform ready")
             // Okay, so the platform is ready and our plugins are available.
             // Here you can do any higher level native things you might need.
 
-                if (registration.isRegistered()) {
-                    this.rootPage = HomePage;
-                } else {
-                    this.rootPage = RegisterPage;
-                }
+          registration.isRegistered().then(is_registered => {
+            console.log("is registered", is_registered)
+            if (is_registered) {
+              this.rootPage = HomePage;
+            } else {
+              this.rootPage = RegisterPage;
+            }
 
-                StatusBar.styleDefault();
-                Splashscreen.hide();
+            StatusBar.styleDefault();
+            Splashscreen.hide();
+          })
 
         });
     }
