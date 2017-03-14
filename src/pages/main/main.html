@@ -1,0 +1,19 @@
+<ion-menu [content]="menubound">
+  <ion-header>
+    <ion-toolbar>
+      <ion-title>pages</ion-title>
+    </ion-toolbar>
+  </ion-header>
+  <ion-content>
+    <ion-list>
+      <button ion-item menuClose (click)="openPage(connectionsPage)">
+        connections
+      </button>
+      <button ion-item (click)="openPage()">
+        Signup
+      </button>
+    </ion-list>
+  </ion-content>
+</ion-menu>
+
+<ion-nav #menubound [root]="rootPage"></ion-nav>

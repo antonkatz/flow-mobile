@@ -37,6 +37,20 @@ $app-colors: (
   color: inherit !important;
 }
 
+ion-header {
+  font-variant: small-caps;
+}
+ion-header ion-icon {
+  color: white;
+}
+.back-button {
+  color: white;
+}
+
+ion-list .user-name {
+  color: color($app-colors, text);
+}
+
 .error-toast .toast-wrapper {
   //border: 1px solid color($colors, danger);
   box-shadow: 0 0 10px 2px color($colors, danger);

@@ -1,6 +1,7 @@
 import {Component} from '@angular/core';
 import {NavController, NavParams} from 'ionic-angular';
 import {Registration} from "../../providers/registration";
+import {HomePage} from "../home/home";
 
 /*
  Generated class for the Register page.
@@ -19,6 +20,8 @@ export class RegisterPage {
     }
 
     register(desired_name: string, invitation_code: string) {
-        this.registrar.register(desired_name, invitation_code)
+        this.registrar.register(desired_name, invitation_code, () => {
+          this.navCtrl.push(HomePage)
+        })
     }
 }

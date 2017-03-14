@@ -18,21 +18,47 @@ export class Registration {
   constructor(public http: Http, public storage: Storage, public comms: ServerComms, public toastCtrl: ToastController) {
   }
 
-  register(desired_name: string, invitation_code: string) {
+  isRegistered(callback: (boolean)=>void) {
+    console.log("Checking if registered")
+    this.comms.sendToServer("/is_registered", null, data => {
+      if (data["response"] && data["response"]["id"] && data["response"]["id"].length > 0) {
+        this.setUserId(data["response"]["id"])
+        callback(true)
+      } else {
+        callback(false)
+      }
+    }, error => {
+      console.log("error during a registration check", error);
+      this.error(error["error_msg"])
+    }, /* force public*/ true)
+  }
+
+  register(desired_name: string, invitation_code: string, callback?: () => void) {
     console.log("Trying to register with ", desired_name, invitation_code)
 
     let reg_req = {"display_name": desired_name, "invitation_code": invitation_code}
     this.comms.sendToServer("/register", reg_req, data => {
       let id = data["response"]["id"]
       if (typeof id === "string" && id.length > 0) {
-        this.storage.set(Registration.storage_user_id, id)
+        this.setUserId(id)
+        callback()
       } else {
         this.error()
       }
     }, error => {
       console.log("error during a registration attempt", error);
-      this.error()
+      this.error(error["error_msg"])
     }, /* force public*/ true)
+  }
+
+  /** not only stores it, but also sets it in server communications module */
+  setUserId(id: string) {
+    this.storage.set(Registration.storage_user_id, id)
+    ServerComms.setUserId(id)
+  }
+
+  getUserId(): Promise<string> {
+    return this.storage.get(Registration.storage_user_id)
   }
 
   private error(given_msg?: string) {
@@ -44,14 +70,5 @@ export class Registration {
       showCloseButton: true
     });
     toast.present()
-  }
-
-  isRegistered(): Promise<boolean> {
-    return this.storage.get(Registration.storage_user_id).then(id => {
-      return (typeof id === "string" && id.length > 0)
-    }, e => {
-      console.log("could not load user id")
-      return false
-    })
   }
 }

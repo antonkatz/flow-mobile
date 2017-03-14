@@ -1,3 +1,16 @@
+<!--<ion-menu [content]="menubound">-->
+<ion-header>
+    <ion-navbar>
+        <button ion-button icon-only menuToggle>
+            <ion-icon name="menu"></ion-icon>
+        </button>
+
+        <ion-title>
+            dashboard
+        </ion-title>
+    </ion-navbar>
+</ion-header>
+
 <ion-content padding class="content">
 
     <p id="balance">
@@ -9,7 +22,12 @@
         <button ion-button color="primary">offer help</button>
     </p>
 
-    <p id="offers">
+    <script>
+        console.log("jd", jdenticon)
+        //        jdenticon.update("#identicon", "ff8adece0631821959f443c9d956fc39");
+    </script>
+
+    <div id="offers">
         <ion-list-header>
             offers to you
             <ion-icon class="help" name="help-circle"></ion-icon>
@@ -17,24 +35,24 @@
         <ion-list>
             <ion-item *ngFor="let offer of offers">
                 <ion-avatar item-left>
-                    <img src="https://cdn.vectorstock.com/i/composite/30,97/flat-business-man-user-profile-avatar-icon-vector-4333097.jpg"/>
+                    <img src="https://www.gravatar.com/avatar/{{md5(offer.userId)}}?s=32&d=identicon&r=PG"/>
                 </ion-avatar>
 
-    <p>
-        <span class="user-name">{{offer.userName}}</span>
-        <span class="amount">{{displayAmount(offer.amount)}}</span>
-        <br/>
-        <span>to help with watering</span>
-    </p>
+                <p>
+                    <span class="user-name">{{offer.userName}}</span>
+                    <span class="amount">{{displayAmount(offer.amount)}}</span>
+                    <br/>
+                    <span>to help with watering</span>
+                </p>
 
 
-    <p class="options">
-        <button ion-button color="secondary" outline>accept</button>
-        <button ion-button color="danger" outline>reject</button>
-    </p>
-    </ion-item>
-    </ion-list>
-    </p>
+                <p class="options">
+                    <button ion-button color="secondary" outline>accept</button>
+                    <button ion-button color="danger" outline>reject</button>
+                </p>
+            </ion-item>
+        </ion-list>
+    </div>
 
     <ion-card>
         <ion-card-header>
@@ -53,3 +71,6 @@
         </ion-card-content>
     </ion-card>
 </ion-content>
+<!--</ion-menu>-->
+
+<!--<ion-nav #menubound [root]="root_page"></ion-nav>-->
