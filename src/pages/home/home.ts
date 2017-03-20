@@ -22,6 +22,8 @@ export class HomePage {
                     {userId: "taoufkviaerndn", userName: "masha", amount: 5}]
 
     console.log("offers", this.offers)
+
+    this.navCtrl.push(ConnectionsPage)
   }
 
   md5(what: any) {

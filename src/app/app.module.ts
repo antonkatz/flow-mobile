@@ -20,7 +20,7 @@ import {MainPage} from "../pages/main/main";
   imports: [
     IonicModule.forRoot(MyApp, {},{
       links: [
-        { component: ConnectionsPage, name: 'Connections', segment: 'connections' }
+        // { component: ConnectionsPage, name: 'Connections', segment: 'connections' }
       ]
     })
   ],

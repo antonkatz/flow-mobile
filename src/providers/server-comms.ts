@@ -18,7 +18,6 @@ export class ServerComms {
   private static server_ip = "192.168.2.14"
   private static server_port = "8080"
   private static server_address = "http://" + ServerComms.server_ip + ":" + ServerComms.server_port
-  private static default_headers = {"Content-Type": "application/json"}
 
   /** current symmetric key. shared between all instances. could be invalid. */
   private static symmetric_key: Uint8Array = null
@@ -27,9 +26,8 @@ export class ServerComms {
   private static user_id = null
 
   constructor(public http: Http, public storage: Storage) {
-    console.log('Hello ServerComms Provider');
     if (ServerComms.self_instance) {
-      console.log("returning existing instance")
+      console.log("returning existing instance of ServerComms")
       return ServerComms.self_instance
     }
 
@@ -37,6 +35,9 @@ export class ServerComms {
     ServerComms.self_instance = this
   }
 
+  private static defaultHeaders(): {} {
+    return {"Content-Type": "application/json"}
+  }
 
   /** endpoint should have leading slash */
   sendToServer(endpoint: string, payload: any, success_callback: (data: {}) => void,
@@ -44,20 +45,22 @@ export class ServerComms {
     let url = ServerComms.server_address + endpoint
     let json_payload = JSON.stringify(payload)
 
-    console.log("contacting server at", url)
-    console.log("with payload", json_payload)
+    console.log("contacting server at", url, "with payload", json_payload)
 
     if (!ServerComms.symmetric_key || force_public) {
       if (ServerComms.payloadFits(json_payload)) {
         this.sendAsymmetrically(url, json_payload).then((data) => {
           data.subscribe(success_callback, error_callback)
         }, error_callback)
-      } else if (ServerComms.user_id) {
-        this.sendSymmetrically(url, json_payload).subscribe(success_callback, error_callback)
       } else {
-        console.log("no sym key or user id AND payload does not fit")
+        console.log("payload does not fit")
         if (error_callback) error_callback({error_type: "not_able_to_send"})
       }
+    } else if (ServerComms.user_id) {
+      this.sendSymmetrically(url, json_payload).subscribe(success_callback, error_callback)
+    } else {
+      console.log("no sym key or user id AND payload does not fit")
+      if (error_callback) error_callback({error_type: "not_able_to_send"})
     }
   }
 
@@ -66,7 +69,7 @@ export class ServerComms {
   }
 
   private sendAsymmetrically(url: string, payload: string): Promise<Observable<{}>> {
-    let headers = ServerComms.default_headers
+    let headers = ServerComms.defaultHeaders()
 
     return ServerComms.rsa.getPubKey().then((pub_key) => {
       console.log("contacting server asymmetrically")
@@ -79,11 +82,18 @@ export class ServerComms {
       }).catch((error: Response | any) => {
         let parsed_error = {}
         if (error instanceof Response) {
-          ServerComms.setSymmetricKey(ServerComms.extractSymmetricKey(error))
-          console.log("sym key", ServerComms.symmetric_key)
-          let body = ServerComms.parseSymmetricallyEncrypted(error)
-          parsed_error = body
-          // parsed_error = {"error_code": body["error_code"] || "", "error_msg": body["error_msg"] || "" }
+          // no internet connection
+          if (error.status == 0) {
+            parsed_error = {"error_code": "no_connection", "error_msg": "perhaps you are not connected to the" +
+            " internet" }
+          } else if (error.status == 401) {
+            parsed_error = {"error_code": "missing_user", "error_msg": "perhaps you are not registered"}
+          } else {
+            ServerComms.setSymmetricKey(ServerComms.extractSymmetricKey(error))
+            console.log("sym key", ServerComms.symmetric_key)
+            let body = ServerComms.parseSymmetricallyEncrypted(error)
+            parsed_error = body
+          }
         } else {
           parsed_error = {
             "error_code": "unknown_error" || "",
@@ -97,28 +107,44 @@ export class ServerComms {
   }
 
   private sendSymmetrically(url: string, payload: string, first_attempt = true): Observable<{}> {
+    console.log("sending symmetrically with key", ServerComms.symmetric_key)
     let epayload = ServerComms.encryptSymmetrically(payload)
-
-    let headers = ServerComms.default_headers
+    let headers = ServerComms.defaultHeaders()
     headers["user_id"] = ServerComms.user_id
     headers["iv"] = epayload.iv
     let config = {headers: new Headers(headers)}
+
     return this.http.post(url, epayload.body, config).map(response => {
-      console.log("sym response", response)
+      let key = ServerComms.extractSymmetricKey(response)
+      ServerComms.setSymmetricKey(key)
+      let body = ServerComms.parseSymmetricallyEncrypted(response)
+      console.log("Symmetric communications response", body)
+      return body
     }).catch((error: Response | any) => {
-      let parsed_error = {}
-      if (error instanceof Response) {
-        ServerComms.setSymmetricKey(ServerComms.extractSymmetricKey(error))
-        console.log("sym key", ServerComms.symmetric_key)
-        let body = ServerComms.parseSymmetricallyEncrypted(error)
-        parsed_error = body
-        // parsed_error = {"error_code": body["error_code"] || "", "error_msg": body["error_msg"] || "" }
-      } else {
-        parsed_error = {
+      console.log("Error during symmetric communications", error)
+
+      let parsed_error: {} = {
           "error_code": "unknown_error" || "",
           "error_msg": "something went wrong and we don't know what happened"
         }
-        console.log("unknown error during comms that is not a response", error)
+      if (error instanceof Response) {
+        ServerComms.setSymmetricKey(ServerComms.extractSymmetricKey(error))
+
+        // re-run if the error is a missing symmetric key on the server side
+        if (error.status == 421) {
+          console.log("The server is missing symmetric key, re-running")
+          if (first_attempt) return this.sendSymmetrically(url, payload, false)
+        } else if (error.status == 0) {
+          parsed_error = {"error_code": "no_connection", "error_msg": "perhaps you are not connected to the" +
+          " internet" }
+        } else {
+          if (ServerComms.symmetric_key) {
+            let body = ServerComms.parseSymmetricallyEncrypted(error)
+            parsed_error = body
+          }
+        }
+      } else {
+        console.log("unknown error during symmetric communication that is not a response", error)
       }
       return Observable.throw(parsed_error)
     })
@@ -127,20 +153,24 @@ export class ServerComms {
   private static extractSymmetricKey(response: Response): Uint8Array {
     // encrypted symmetric key in hex
     let eskh = response.headers.get("sym_key")
-    // decrypted symmetric key in hex
-    let dskh = ServerComms.rsa.parseFromServer(eskh)
-    return aesjs.utils.hex.toBytes(dskh)
+    if (eskh) {
+      // decrypted symmetric key in hex
+      let dskh = ServerComms.rsa.parseFromServer(eskh)
+      return aesjs.utils.hex.toBytes(dskh)
+    } else {
+      return null
+    }
   }
 
   /** @return symmetrically encrypted body and iv, both in hex*/
   private static encryptSymmetrically(what: string): SymmetricallyEncrypted {
     let iv = ServerComms.generateIv()
     let bytes = aesjs.utils.utf8.toBytes(what);
+    let padded = aesjs.padding.pkcs7.pad(bytes)
     let aes = new aesjs.ModeOfOperation.cbc(ServerComms.symmetric_key, iv);
-    let ebytes = aes.encrypt(bytes)
+    let ebytes = aes.encrypt(padded)
     let ehex = aesjs.utils.hex.fromBytes(ebytes);
     let ivhex = aesjs.utils.hex.fromBytes(iv)
-    console.log("encrypting symmetrically", ehex, ivhex)
     return {body: ehex, iv: ivhex} as SymmetricallyEncrypted
   }
 
@@ -170,7 +200,10 @@ export class ServerComms {
 
   /** this should be the only way to set the symmetric key */
   private static setSymmetricKey(key: Uint8Array) {
-    ServerComms.symmetric_key = key
+    if (key) {
+      console.log("setting symmetric key", key)
+      ServerComms.symmetric_key = key
+    }
   }
 
   /** @return true if the payload can be encoded with a public key */
@@ -183,6 +216,17 @@ export class ServerComms {
     }
     // return payload.length < (RSA.key_bits / 8)
     return a.length < RSA.key_bits
+  }
+
+  static errorToast(toastCtrl, given_msg?: string) {
+    let msg =  given_msg || "oops... something went wrong and we don't know what"
+    let toast = toastCtrl.create({
+      message: msg,
+      position: 'top',
+      cssClass: 'error-toast',
+      showCloseButton: true
+    });
+    toast.present()
   }
 }
 

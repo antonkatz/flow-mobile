@@ -15,7 +15,9 @@ import {ToastController} from "ionic-angular";
 export class Registration {
   static storage_user_id:string = "user_id"
 
-  constructor(public http: Http, public storage: Storage, public comms: ServerComms, public toastCtrl: ToastController) {
+  constructor(public http: Http, public storage: Storage, public comms: ServerComms, public toastCtrl: ToastController)
+  {
+    this.getUserId().then(id => this.setUserId(id))
   }
 
   isRegistered(callback: (boolean)=>void) {
@@ -29,7 +31,10 @@ export class Registration {
       }
     }, error => {
       console.log("error during a registration check", error);
-      this.error(error["error_msg"])
+      if (!(error['error_code'] && error["error_code"] == "missing_user")) {
+        ServerComms.errorToast(this.toastCtrl, error["error_msg"])
+      }
+      callback(false)
     }, /* force public*/ true)
   }
 
@@ -43,32 +48,22 @@ export class Registration {
         this.setUserId(id)
         callback()
       } else {
-        this.error()
+        ServerComms.errorToast(this.toastCtrl)
       }
     }, error => {
       console.log("error during a registration attempt", error);
-      this.error(error["error_msg"])
+      ServerComms.errorToast(this.toastCtrl,error["error_msg"])
     }, /* force public*/ true)
   }
 
   /** not only stores it, but also sets it in server communications module */
   setUserId(id: string) {
     this.storage.set(Registration.storage_user_id, id)
+    console.log("user id", id)
     ServerComms.setUserId(id)
   }
 
   getUserId(): Promise<string> {
     return this.storage.get(Registration.storage_user_id)
-  }
-
-  private error(given_msg?: string) {
-    let msg =  given_msg || "oops... something went wrong and we don't know what"
-    let toast = this.toastCtrl.create({
-      message: msg,
-      position: 'top',
-      cssClass: 'error-toast',
-      showCloseButton: true
-    });
-    toast.present()
   }
 }
