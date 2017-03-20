@@ -14,28 +14,30 @@ import {ToastController} from "ionic-angular";
   templateUrl: 'connections.html'
 })
 export class ConnectionsPage {
-  connections = []
+  fof = []
+  friends = []
 
   constructor(public comms: ServerComms, public toastCtrl: ToastController) {
     console.log("Looking up connected users")
     this.comms.sendToServer("/get_connections", null, data => {
-      console.log("connected to", data)
+      let r = data["response"]
+      this.fof = r["fof"]
+      this.friends = r["friends"]
+      console.log("connected to friends", this.friends, "and friends of friends", this.fof)
     }, error => {
       console.log("error during a connections lookup", error);
       ServerComms.errorToast(this.toastCtrl, error["error_msg"])
     })
+  }
 
-    this.connections = [{userId: "ooarsetndhbvktnndvaeroasnd", userName: "vasya"},
-      {userId: "rsetndhbvktnndvaeroasnd", userName: "petya"},
-      {userId: "taoufkviaerndn", userName: "masha"}]
+  offerHelp(whom: string) {
+    console.log("offering help to", whom)
+    
   }
 
   md5(what: any) {
-    return md5(what)
+    if (what) {
+      return md5(what)
+    }
   }
-
-  ionViewDidLoad() {
-    console.log('ionViewDidLoad WebSplashPage');
-  }
-
 }

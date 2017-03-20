@@ -6,52 +6,56 @@
 -->
 <ion-header>
 
-  <ion-navbar>
-    <ion-title>connections</ion-title>
-  </ion-navbar>
+    <ion-navbar>
+        <ion-title>connections</ion-title>
+    </ion-navbar>
 
 </ion-header>
 
 
 <ion-content padding>
+    <div>
+        <ion-list>
+            <ion-list-header>
+                your friends
+                <ion-icon class="help" name="help-circle"></ion-icon>
+            </ion-list-header>
+            <ion-item *ngFor="let con of friends">
+                <ion-avatar item-left>
+                    <img src="https://www.gravatar.com/avatar/{{md5(con.user_id)}}?s=32&d=identicon&r=PG"/>
+                </ion-avatar>
 
-  <div>
-    <ion-list>
-      <ion-list-header>
-        your friends
-        <ion-icon class="help" name="help-circle"></ion-icon>
-      </ion-list-header>
-      <ion-item *ngFor="let con of connections">
-        <ion-avatar item-left>
-          <img src="https://www.gravatar.com/avatar/{{md5(con.userId)}}?s=32&d=identicon&r=PG"/>
-        </ion-avatar>
+                <p class="friend-line-one">
+                    <span class="user-name">{{con.display_name}}</span>
+                    <button ion-button color="secondary" outline (click)="offerHelp(con.user_id)">
+                        help
+                    </button>
+                </p>
 
-        <p>
-          <span class="user-name">{{con.userName}}</span>
-          <button ion-button color="secondary" outline>help</button>
-        </p>
+            </ion-item>
+        </ion-list>
+    </div>
+    <div>
+        <ion-list>
+            <ion-list-header>
+                friends of friends
+                <ion-icon class="help" name="help-circle"></ion-icon>
+            </ion-list-header>
+            <ng-container *ngFor="let level of fof">
+                <ion-item *ngFor="let con of level">
+                    <ion-avatar item-left>
+                        <img src="https://www.gravatar.com/avatar/{{md5(con.user_id)}}?s=32&d=identicon&r=PG"/>
+                    </ion-avatar>
 
-      </ion-item>
-    </ion-list>
-  </div>
-  <div>
-    <ion-list>
-      <ion-list-header>
-        friends of friends
-        <ion-icon class="help" name="help-circle"></ion-icon>
-      </ion-list-header>
-      <ion-item *ngFor="let con of connections">
-        <ion-avatar item-left>
-          <img src="https://www.gravatar.com/avatar/{{md5(con.userId)}}?s=32&d=identicon&r=PG"/>
-        </ion-avatar>
-
-        <p>
-          <span class="user-name">{{con.userName}}</span>
-          <button ion-button color="secondary" outline>help</button>
-        </p>
-
-      </ion-item>
-    </ion-list>
-  </div>
+                    <p class="friend-line-one">
+                        <span class="user-name">{{con.display_name}}</span>
+                        <button ion-button color="secondary" outline (click)="offerHelp(con.user_id)">
+                            help
+                        </button>
+                    </p>
+                </ion-item>
+            </ng-container>
+        </ion-list>
+    </div>
 
 </ion-content>
