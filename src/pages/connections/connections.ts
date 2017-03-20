@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import md5 from "md5"
 import {ServerComms} from "../../providers/server-comms";
 import {ToastController} from "ionic-angular";
+import {CreateOfferPage} from "../create-offer/create-offer";
 
 /*
   Generated class for the WebSplash page.
@@ -14,6 +15,7 @@ import {ToastController} from "ionic-angular";
   templateUrl: 'connections.html'
 })
 export class ConnectionsPage {
+  offer_page = CreateOfferPage
   fof = []
   friends = []
 
@@ -28,11 +30,6 @@ export class ConnectionsPage {
       console.log("error during a connections lookup", error);
       ServerComms.errorToast(this.toastCtrl, error["error_msg"])
     })
-  }
-
-  offerHelp(whom: string) {
-    console.log("offering help to", whom)
-    
   }
 
   md5(what: any) {

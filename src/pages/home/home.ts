@@ -2,6 +2,7 @@ import { Component, ElementRef} from '@angular/core';
 import md5 from "md5"
 import { NavController } from 'ionic-angular';
 import {ConnectionsPage} from "../connections/connections";
+import {CreateOfferPage} from "../create-offer/create-offer";
 
 
 @Component({
@@ -23,7 +24,7 @@ export class HomePage {
 
     console.log("offers", this.offers)
 
-    this.navCtrl.push(ConnectionsPage)
+    this.navCtrl.push(CreateOfferPage)
   }
 
   md5(what: any) {

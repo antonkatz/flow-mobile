@@ -25,6 +25,7 @@ $app-colors: (
 .scroll-content {
   background: color($app-colors, bg);
   color: color($app-colors, text);
+  overflow-y: inherit;
 }
 .toolbar-background {
   background: color($app-colors, bg);

@@ -8,6 +8,7 @@ import {Registration} from "../providers/registration"
 import {ServerComms} from "../providers/server-comms";
 import {ConnectionsPage} from "../pages/connections/connections";
 import {MainPage} from "../pages/main/main";
+import {CreateOfferPage} from "../pages/create-offer/create-offer";
 
 @NgModule({
   declarations: [
@@ -15,7 +16,8 @@ import {MainPage} from "../pages/main/main";
     HomePage,
     RegisterPage,
     ConnectionsPage,
-    MainPage
+    MainPage,
+    CreateOfferPage
   ],
   imports: [
     IonicModule.forRoot(MyApp, {},{
@@ -30,7 +32,8 @@ import {MainPage} from "../pages/main/main";
     HomePage,
     RegisterPage,
     ConnectionsPage,
-    MainPage
+    MainPage,
+    CreateOfferPage
   ],
   providers: [{provide: ErrorHandler, useClass: IonicErrorHandler}, Storage, Registration, ServerComms]
 })

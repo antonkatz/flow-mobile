@@ -7,7 +7,7 @@
 <ion-header>
 
     <ion-navbar>
-        <ion-title>connections</ion-title>
+        <ion-title>friends</ion-title>
     </ion-navbar>
 
 </ion-header>
@@ -27,7 +27,7 @@
 
                 <p class="friend-line-one">
                     <span class="user-name">{{con.display_name}}</span>
-                    <button ion-button color="secondary" outline (click)="offerHelp(con.user_id)">
+                    <button ion-button color="secondary" outline [navPush]="offer_page" [navParams]="con">
                         help
                     </button>
                 </p>
@@ -49,7 +49,7 @@
 
                     <p class="friend-line-one">
                         <span class="user-name">{{con.display_name}}</span>
-                        <button ion-button color="secondary" outline (click)="offerHelp(con.user_id)">
+                        <button ion-button color="secondary" outline [navPush]="offer_page" [navParams]="con">
                             help
                         </button>
                     </p>
