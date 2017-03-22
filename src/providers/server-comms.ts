@@ -15,7 +15,8 @@ import {Registration} from "./registration";
 @Injectable()
 export class ServerComms {
 
-  private static server_ip = "192.168.2.14"
+  // private static server_ip = "192.168.2.14"
+  private static server_ip = "localhost"
   private static server_port = "8080"
   private static server_address = "http://" + ServerComms.server_ip + ":" + ServerComms.server_port
 

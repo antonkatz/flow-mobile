@@ -1,12 +1,6 @@
 import {Component} from '@angular/core';
-import {Platform, NavController} from 'ionic-angular';
-import {StatusBar, Splashscreen} from 'ionic-native';
-import { Storage } from '@ionic/storage';
+import {Platform} from 'ionic-angular';
 
-import {HomePage} from '../pages/home/home';
-import {RegisterPage} from "../pages/register/register";
-import {Registration} from "../providers/registration";
-import {ConnectionsPage} from "../pages/connections/connections";
 import {MainPage} from "../pages/main/main";
 
 @Component({

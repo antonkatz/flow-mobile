@@ -21,7 +21,7 @@ export class ConnectionsPage {
 
   constructor(public comms: ServerComms, public toastCtrl: ToastController) {
     console.log("Looking up connected users")
-    this.comms.sendToServer("/get_connections", null, data => {
+    this.comms.sendToServer("/connections/get", null, data => {
       let r = data["response"]
       this.fof = r["fof"]
       this.friends = r["friends"]

@@ -55,6 +55,9 @@
                     </p>
                 </ion-item>
             </ng-container>
+            <ion-note *ngIf="fof.length == 0" style="text-align: center; padding: 1em; display:block">
+                your friends don't seem to have friends
+            </ion-note>
         </ion-list>
     </div>
 

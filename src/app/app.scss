@@ -17,6 +17,7 @@
 
 $app-colors: (
         balance: #869635,
+        balance-bright: #abbf43,
         text: whitesmoke,
         header: rgba(255, 255, 255, 0.71),
         bg: #171e1f
@@ -48,7 +49,7 @@ ion-header ion-icon {
   color: white;
 }
 
-ion-list .user-name {
+ion-list .display-name {
   color: color($app-colors, text);
 }
 
