@@ -19,7 +19,7 @@
     </p>
 
     <p text-center>
-        <button ion-button color="primary">offer help</button>
+        <button ion-button color="primary" (click)="offerHelp()">offer help</button>
     </p>
 
     <div id="offers">
@@ -39,7 +39,7 @@
                 </ion-avatar>
 
                 <p>
-                    <span class="display-name">{{offer.display_name}}</span>
+                    <span class="display-name">{{display_names[offer.from_user_id]}}</span>
                     <span class="amount">{{displayAmount(offer.hours)}}</span>
                     <br/>
                     <span class="description">{{offer.description}}</span>
@@ -47,8 +47,11 @@
 
 
                 <p class="options">
-                    <button ion-button color="danger" outline>reject</button>
-                    <button ion-button color="secondary" outline>complete</button>
+                    <button ion-button color="secondary" outline (click)="completeOffer(offer.offer_id)"
+                            style="float: left">
+                        complete
+                    </button>
+                    <button ion-button color="danger" outline (click)="rejectOffer(offer.offer_id)">reject</button>
                 </p>
             </ion-item>
         </ion-list>
