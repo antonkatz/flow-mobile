@@ -12,10 +12,10 @@ import {ToastController} from "ionic-angular";
 */
 @Injectable()
 export class Wallet {
-  private interest_timeout = 1 // in seconds
+  private interest_timeout = 10 // in seconds
   private wallet = {}
-  private uncommited_interest = 0
   private callback = null
+  private interest_rate = 0
 
   private identifier = Math.round(Math.random() * 100)
 
@@ -24,11 +24,38 @@ export class Wallet {
 
     // setInterval()
     this.retrieveWallet()
-    return this
+
+
+  }
+
+  startInterestRateRefresher()  {
+    this.comms.sendToServer("/algorithm/interest", {time_unit: this.interest_timeout}, data => {
+      this.interest_rate = data["response"]
+      console.log("interest rate is", this.interest_rate)
+
+      if (this.callback) {
+        setInterval(() => {
+          this.intervalInterestCalculator()
+          this.callback(this)
+        }, this.interest_timeout * 1000)
+      }
+
+    }, error => {
+      console.log("error while getting the interest rate", error);
+      ServerComms.errorToast(this.toastCtrl, error["error_msg"])
+    })
+  }
+
+  intervalInterestCalculator() {
+    this.wallet["uncommited_interest"] = this.wallet["uncommited_interest"] * this.interest_rate
   }
 
   getBalance() {
     return this.wallet["committed_balance"]
+  }
+
+  getUncommitedInterest() {
+    return this.wallet["uncommited_interest"]
   }
 
   setRefresher(callback) {
@@ -38,6 +65,11 @@ export class Wallet {
   setWallet(w) {
     if (w) {
       this.wallet = w
+
+      /* todo REMOVE */
+      this.wallet["uncommited_interest"] = 1
+
+
       if (this.callback) {
         this.callback(this)
       }

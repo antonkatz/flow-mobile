@@ -13,11 +13,15 @@
 
 <ion-content padding class="content">
 
-    <p id="balance">
-        <button ion-button color="secondary" outline> {{balance_display}}
-            <span class="note">owed friends</span></button>
+    <div id="balance">
+        <div class = "button" style="display: inline-block; border-radius: 0.1em;">
+            <span style="float:left">{{balance_display}}</span>
+            <span class="note" style="float:right">owed friends</span>
+            <br>
+            <span style="float: left">+ {{uncommited_interest}}</span>
+        </div>
         <span class="help"><ion-icon name="help-circle"></ion-icon></span>
-    </p>
+    </div>
 
     <p text-center>
         <button ion-button color="primary" (click)="offerHelp()">offer help</button>

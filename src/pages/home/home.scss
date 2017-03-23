@@ -2,6 +2,12 @@ page-home {
   #balance {
     margin-top: 0;
     text-align: center;
+    color: color($colors, secondary)
+  }
+  #balance .button {
+    border: 1px solid color($colors, secondary);
+    padding: 0.7em;
+    font-size: 1.6rem;
   }
   #balance .help {
     margin-left: 0.3em;

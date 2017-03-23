@@ -17,6 +17,8 @@ export class HomePage {
   display_names = {}
   balance = 0
   balance_display = ""
+  uncommited_interest = 0
+  uncommited_interest_digits = 15
 
   connectionsPage;
 
@@ -54,6 +56,7 @@ export class HomePage {
       ServerComms.errorToast(this.toastCtrl, error["error_msg"])
     })
 
+    this.walletProv.startInterestRateRefresher()
   }
 
   balanceRefresherGen() {
@@ -61,6 +64,7 @@ export class HomePage {
     return (wP) => {
       cthis.balance = wP.getBalance()
       cthis.balance_display = Wallet.displayAmount(cthis.balance)
+      cthis.uncommited_interest = wP.getUncommitedInterest().toFixed(cthis.uncommited_interest_digits)
     }
   }
 
