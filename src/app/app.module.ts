@@ -9,6 +9,7 @@ import {ServerComms} from "../providers/server-comms";
 import {ConnectionsPage} from "../pages/connections/connections";
 import {MainPage} from "../pages/main/main";
 import {CreateOfferPage} from "../pages/create-offer/create-offer";
+import {Wallet} from "../providers/wallet";
 
 @NgModule({
   declarations: [
@@ -35,6 +36,6 @@ import {CreateOfferPage} from "../pages/create-offer/create-offer";
     MainPage,
     CreateOfferPage
   ],
-  providers: [{provide: ErrorHandler, useClass: IonicErrorHandler}, Storage, Registration, ServerComms]
+  providers: [{provide: ErrorHandler, useClass: IonicErrorHandler}, Storage, Registration, ServerComms, Wallet]
 })
 export class AppModule {}

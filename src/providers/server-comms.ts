@@ -108,7 +108,7 @@ export class ServerComms {
   }
 
   private sendSymmetrically(url: string, payload: string, first_attempt = true): Observable<{}> {
-    console.log("sending symmetrically with key", ServerComms.symmetric_key)
+    // console.log("sending symmetrically with key", ServerComms.symmetric_key)
     let epayload = ServerComms.encryptSymmetrically(payload)
     let headers = ServerComms.defaultHeaders()
     headers["user_id"] = ServerComms.user_id
@@ -119,7 +119,7 @@ export class ServerComms {
       let key = ServerComms.extractSymmetricKey(response)
       ServerComms.setSymmetricKey(key)
       let body = ServerComms.parseSymmetricallyEncrypted(response)
-      console.log("Symmetric communications response", body)
+      // console.log("Symmetric communications response", body)
       return body
     }).catch((error: Response | any) => {
       console.log("Error during symmetric communications", error)

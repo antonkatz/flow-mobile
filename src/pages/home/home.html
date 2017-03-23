@@ -14,7 +14,8 @@
 <ion-content padding class="content">
 
     <p id="balance">
-        <button ion-button color="secondary" outline>one hour <span class="note">owed friends</span></button>
+        <button ion-button color="secondary" outline> {{balance_display}}
+            <span class="note">owed friends</span></button>
         <span class="help"><ion-icon name="help-circle"></ion-icon></span>
     </p>
 
@@ -40,7 +41,7 @@
 
                 <p>
                     <span class="display-name">{{display_names[offer.from_user_id]}}</span>
-                    <span class="amount">{{displayAmount(offer.hours)}}</span>
+                    <span class="amount">{{offer.display_hours}}</span>
                     <br/>
                     <span class="description">{{offer.description}}</span>
                 </p>
