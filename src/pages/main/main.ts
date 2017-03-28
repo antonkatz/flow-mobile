@@ -23,7 +23,7 @@ export class MainPage {
   constructor(public navCtrl: NavController, public navParams: NavParams, registration: Registration) {
     this.connectionsPage = ConnectionsPage
 
-    registration.isRegistered((is_registered: boolean) => {
+    registration.handshake((is_registered: boolean) => {
       console.log("is registered", is_registered)
       if (is_registered) {
         this.rootPage = HomePage;

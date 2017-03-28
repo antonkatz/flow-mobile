@@ -15,27 +15,27 @@
 
     <div id="balance">
         <div class = "button" style="display: inline-block; border-radius: 0.1em;">
-            <span style="float:left">{{balance_display}}</span>
+            <span style="float:left">{{principal_display}}</span>
             <span class="note" style="float:right">owed friends</span>
             <br>
-            <span style="float: left">+ {{uncommited_interest}}</span>
+            <span style="float: left">+ {{interest_balance}}</span>
         </div>
         <span class="help"><ion-icon name="help-circle"></ion-icon></span>
     </div>
 
     <p text-center>
-        <button ion-button color="primary" (click)="offerHelp()">offer help</button>
+        <button ion-button color="primary" (click)="offerHelp()">invoice</button>
     </p>
 
     <div id="offers">
         <ion-list-header>
-            offers to you
+            incoming invoices
             <ion-icon class="help" name="help-circle"></ion-icon>
         </ion-list-header>
         <ion-list>
             <ion-note *ngIf="offers.length == 0" style="text-align: center; padding: 1em; display:block">
-                <ion-icon name="sad"></ion-icon> <br>
-                no one has offered you help yet, maybe you should offer some
+                <ion-icon name="happy"></ion-icon> <br>
+                your slate is clear -- you've payed all who have helped you
             </ion-note>
 
             <ion-item *ngFor="let offer of offers">

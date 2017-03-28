@@ -1,5 +1,4 @@
 import { Injectable } from '@angular/core';
-import { Http } from '@angular/http';
 import 'rxjs/add/operator/map';
 import {ServerComms} from "./server-comms";
 import {ToastController} from "ionic-angular";
@@ -28,7 +27,9 @@ export class Wallet {
 
   }
 
-  startInterestRateRefresher()  {
+  private debug_timer = (new Date()).getTime()
+
+  startInterestRefresher()  {
     this.comms.sendToServer("/algorithm/interest", {time_unit: this.interest_timeout}, data => {
       this.interest_rate = data["response"]
       console.log("interest rate is", this.interest_rate)
@@ -36,6 +37,9 @@ export class Wallet {
       if (this.callback) {
         setInterval(() => {
           this.intervalInterestCalculator()
+          let t = (new Date()).getTime()
+          console.log("updated interest in", (t - this.debug_timer) / 1000)
+          this.debug_timer = t
           this.callback(this)
         }, this.interest_timeout * 1000)
       }
@@ -47,15 +51,15 @@ export class Wallet {
   }
 
   intervalInterestCalculator() {
-    this.wallet["uncommited_interest"] = this.wallet["uncommited_interest"] * this.interest_rate
+    this.wallet["uncommitted_interest"] += (this.getPrincipal() + this.getInterest()) * (this.interest_rate - 1)
   }
 
-  getBalance() {
-    return this.wallet["committed_balance"]
+  getPrincipal() {
+    return this.wallet["principal"]
   }
 
-  getUncommitedInterest() {
-    return this.wallet["uncommited_interest"]
+  getInterest() {
+    return this.wallet["interest"] + this.wallet["uncommitted_interest"]
   }
 
   setRefresher(callback) {
@@ -65,11 +69,6 @@ export class Wallet {
   setWallet(w) {
     if (w) {
       this.wallet = w
-
-      /* todo REMOVE */
-      this.wallet["uncommited_interest"] = 1
-
-
       if (this.callback) {
         this.callback(this)
       }
@@ -80,7 +79,8 @@ export class Wallet {
     let payload = {'offer_id': id}
     this.comms.sendToServer("/offers/" + action, payload, data => {
       let r = data["response"]
-      if (r["transaction_id"] || r["offer_id"]) {
+      console.log("transaction response", r)
+      if (r["transaction_id"] || r["offer_id"] || r.length > 0) {
 
         let msg = toast_msg_func(r)
         callback(r)

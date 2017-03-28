@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import {NavController, NavParams, ToastController} from 'ionic-angular';
 import md5 from "md5"
 import {ServerComms} from "../../providers/server-comms";
+import {HomePage} from "../home/home";
 
 /*
   Generated class for the CreateOffer page.
@@ -34,6 +35,18 @@ export class CreateOfferPage {
     this.comms.sendToServer("/offers/create", request, data => {
       let r = data["response"]
       console.log("on offer creation response was", r)
+      if (r["offer_id"]) {
+        this.navCtrl.push(HomePage)
+        let toast = this.toastCtrl.create({
+          message: "invoice sent to " + this.display_name,
+          position: 'bottom',
+          cssClass: 'success-toast',
+          duration: 3000
+        });
+        toast.present()
+      } else {
+        ServerComms.errorToast(this.toastCtrl)
+      }
     }, error => {
       console.log("error during a connections lookup", error);
       ServerComms.errorToast(this.toastCtrl, error["error_msg"])

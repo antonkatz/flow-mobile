@@ -1,8 +1,7 @@
 import { Component} from '@angular/core';
 import md5 from "md5"
-import {NavController, ToastController, ModalController, AlertController} from 'ionic-angular';
+import {NavController, ToastController, AlertController} from 'ionic-angular';
 import {ConnectionsPage} from "../connections/connections";
-import {CreateOfferPage} from "../create-offer/create-offer";
 import {ServerComms} from "../../providers/server-comms";
 import {Wallet} from "../../providers/wallet";
 
@@ -15,17 +14,18 @@ export class HomePage {
   // root_page = HomePage;
   offers = [];
   display_names = {}
-  balance = 0
-  balance_display = ""
-  uncommited_interest = 0
-  uncommited_interest_digits = 15
+  principal = 0
+  principal_display = ""
+  interest_digits = 15
+  interest_balance: String = ""
 
   connectionsPage;
 
   constructor(public navCtrl: NavController, public comms: ServerComms, public toastCtrl: ToastController,
               private alertCtrl: AlertController, public walletProv: Wallet) {
     this.connectionsPage = ConnectionsPage
-    this.balance_display = Wallet.displayAmount(this.balance)
+    this.principal_display = Wallet.displayAmount(this.principal)
+    this.interest_balance = Number(0).toFixed(this.interest_digits)
 
     this.walletProv.setRefresher(this.balanceRefresherGen())
 
@@ -56,28 +56,30 @@ export class HomePage {
       ServerComms.errorToast(this.toastCtrl, error["error_msg"])
     })
 
-    this.walletProv.startInterestRateRefresher()
+    this.walletProv.startInterestRefresher()
   }
 
   balanceRefresherGen() {
     let cthis = this
     return (wP) => {
-      cthis.balance = wP.getBalance()
-      cthis.balance_display = Wallet.displayAmount(cthis.balance)
-      cthis.uncommited_interest = wP.getUncommitedInterest().toFixed(cthis.uncommited_interest_digits)
+      cthis.principal = wP.getPrincipal()
+      cthis.principal_display = Wallet.displayAmount(cthis.principal)
+      cthis.interest_balance = wP.getInterest().toFixed(cthis.interest_digits)
     }
   }
 
   completeOffer(id) {
-    let hours = this.offers.filter((o) => o["offer_id"] == id)[0]["hours"]
+    let offer = this.offers.filter((o) => o["offer_id"] == id)[0]
+    let hours = offer["hours"]
+    let from_user = this.display_names[offer["from_user_id"]]
     let prompt_text = "you want to accept " + Wallet.displayAmount(hours)
 
     let cthis = this
     let toast_msg_func = (resp) => {
-      return "successfully transferred " + Wallet.displayAmount(resp['amount']) + " from '" + resp["from_user_id"] + "'"
+      return "successfully transferred " + Wallet.displayAmount(hours) + " from '" + from_user + "'"
     }
     let callback = (resp) => {
-      cthis.offerRemoveFromResponse(resp)
+      cthis.offers = cthis.offers.filter(o => o["offer_id"] != offer['offer_id'])
     }
     let act = () => {
       cthis.walletProv.commitTransaction(id, "complete", callback, toast_msg_func)

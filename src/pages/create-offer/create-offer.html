@@ -7,7 +7,7 @@
 <ion-header>
 
   <ion-navbar>
-    <ion-title>offer help</ion-title>
+    <ion-title>invoice</ion-title>
   </ion-navbar>
 
 </ion-header>
@@ -16,7 +16,7 @@
 <ion-content padding>
 
     <p>
-        you are offering help to
+        you are sending an invoice to
     </p>
     <ion-item class="user-item">
         <ion-avatar item-left>
@@ -35,7 +35,7 @@
         </div>
     </ion-item>
     <ion-item>
-        <ion-label color="primary" stacked>with what</ion-label>
+        <ion-label color="primary" stacked>what for</ion-label>
         <ion-input [(ngModel)]="description" type="text" placeholder="writing a song or just dishes"></ion-input>
     </ion-item>
     <!--<ion-item>-->
@@ -44,6 +44,6 @@
     <!--</ion-item>-->
 
     <p style="text-align: center">
-        <button ion-button color="primary" (click)="offerHelp()">offer hours</button>
+        <button ion-button color="primary" (click)="offerHelp()">invoice</button>
     </p>
 </ion-content>

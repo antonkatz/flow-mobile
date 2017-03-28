@@ -20,9 +20,9 @@ export class Registration {
     this.getUserId().then(id => this.setUserId(id))
   }
 
-  isRegistered(callback: (boolean)=>void) {
+  handshake(callback: (boolean)=>void) {
     console.log("Checking if registered")
-    this.comms.sendToServer("/is_registered", null, data => {
+    this.comms.sendToServer("/handshake", null, data => {
       if (data["response"] && data["response"]["id"] && data["response"]["id"].length > 0) {
         this.setUserId(data["response"]["id"])
         callback(true)
