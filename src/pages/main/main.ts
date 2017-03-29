@@ -5,6 +5,7 @@ import {RegisterPage} from "../register/register";
 import {HomePage} from "../home/home";
 import {Registration} from "../../providers/registration";
 import {ConnectionsPage} from "../connections/connections";
+import {WalletPage} from "../wallet/wallet";
 
 /*
   Generated class for the Main page.
@@ -19,9 +20,11 @@ import {ConnectionsPage} from "../connections/connections";
 export class MainPage {
   rootPage = null
   connectionsPage
+  wallet_page
 
   constructor(public navCtrl: NavController, public navParams: NavParams, registration: Registration) {
     this.connectionsPage = ConnectionsPage
+    this.wallet_page = WalletPage
 
     registration.handshake((is_registered: boolean) => {
       console.log("is registered", is_registered)
@@ -31,6 +34,7 @@ export class MainPage {
         this.rootPage = RegisterPage;
       }
 
+      this.navCtrl.push(WalletPage)
       StatusBar.styleDefault();
       Splashscreen.hide();
     })
@@ -39,9 +43,4 @@ export class MainPage {
   openPage(page) {
     this.navCtrl.push(page)
   }
-
-  ionViewDidLoad() {
-    console.log('ionViewDidLoad MainPage');
-  }
-
 }

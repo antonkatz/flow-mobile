@@ -52,10 +52,15 @@ ion-header ion-icon {
 ion-list .display-name {
   color: color($app-colors, text);
 }
+ion-list .item-block .item-inner {
+  border-color: rgba(255, 255, 255, 0.3) !important;
+}
 
 ion-label[stacked], ion-label[floating] {
   font-size: 1.5rem !important;
 }
+
+
 
 .error-toast .toast-wrapper {
   //border: 1px solid color($colors, danger);

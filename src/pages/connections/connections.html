@@ -20,14 +20,14 @@
                 your friends
                 <ion-icon class="help" name="help-circle"></ion-icon>
             </ion-list-header>
-            <ion-item *ngFor="let con of friends">
+            <ion-item *ngFor="let con of friends" [navPush]="offer_page" [navParams]="con">
                 <ion-avatar item-left>
                     <img src="https://www.gravatar.com/avatar/{{md5(con.user_id)}}?s=32&d=identicon&r=PG"/>
                 </ion-avatar>
 
                 <p class="friend-line-one">
                     <span class="display-name">{{con.display_name}}</span>
-                    <button ion-button color="secondary" outline [navPush]="offer_page" [navParams]="con">
+                    <button ion-button color="secondary" outline>
                         invoice
                     </button>
                 </p>
@@ -42,14 +42,14 @@
                 <ion-icon class="help" name="help-circle"></ion-icon>
             </ion-list-header>
             <ng-container *ngFor="let level of fof">
-                <ion-item *ngFor="let con of level">
+                <ion-item *ngFor="let con of level" [navPush]="offer_page" [navParams]="con">
                     <ion-avatar item-left>
                         <img src="https://www.gravatar.com/avatar/{{md5(con.user_id)}}?s=32&d=identicon&r=PG"/>
                     </ion-avatar>
 
                     <p class="friend-line-one">
                         <span class="display-name">{{con.display_name}}</span>
-                        <button ion-button color="secondary" outline [navPush]="offer_page" [navParams]="con">
+                        <button ion-button color="secondary" outline>
                             invoice
                         </button>
                     </p>

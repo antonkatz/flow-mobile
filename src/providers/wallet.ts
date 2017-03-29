@@ -17,17 +17,16 @@ export class Wallet {
   private interest_rate = 0
 
   private identifier = Math.round(Math.random() * 100)
+  private interval_id = null
 
   constructor(public comms: ServerComms, public toastCtrl: ToastController) {
     console.log('Hello Wallet Provider ' + this.identifier);
 
     // setInterval()
     this.retrieveWallet()
-
-
   }
 
-  private debug_timer = (new Date()).getTime()
+  // private debug_timer = (new Date()).getTime()
 
   startInterestRefresher()  {
     this.comms.sendToServer("/algorithm/interest", {time_unit: this.interest_timeout}, data => {
@@ -35,11 +34,14 @@ export class Wallet {
       console.log("interest rate is", this.interest_rate)
 
       if (this.callback) {
-        setInterval(() => {
+        if (this.interval_id) {
+          clearInterval(this.interval_id)
+        }
+        this.interval_id = setInterval(() => {
           this.intervalInterestCalculator()
-          let t = (new Date()).getTime()
-          console.log("updated interest in", (t - this.debug_timer) / 1000)
-          this.debug_timer = t
+          // let t = (new Date()).getTime()
+          // console.log("updated interest in", (t - this.debug_timer) / 1000)
+          // this.debug_timer = t
           this.callback(this)
         }, this.interest_timeout * 1000)
       }

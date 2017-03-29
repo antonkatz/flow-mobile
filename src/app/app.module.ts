@@ -10,6 +10,7 @@ import {ConnectionsPage} from "../pages/connections/connections";
 import {MainPage} from "../pages/main/main";
 import {CreateOfferPage} from "../pages/create-offer/create-offer";
 import {Wallet} from "../providers/wallet";
+import {WalletPage} from "../pages/wallet/wallet";
 
 @NgModule({
   declarations: [
@@ -18,7 +19,8 @@ import {Wallet} from "../providers/wallet";
     RegisterPage,
     ConnectionsPage,
     MainPage,
-    CreateOfferPage
+    CreateOfferPage,
+    WalletPage
   ],
   imports: [
     IonicModule.forRoot(MyApp, {},{
@@ -34,7 +36,8 @@ import {Wallet} from "../providers/wallet";
     RegisterPage,
     ConnectionsPage,
     MainPage,
-    CreateOfferPage
+    CreateOfferPage,
+    WalletPage
   ],
   providers: [{provide: ErrorHandler, useClass: IonicErrorHandler}, Storage, Registration, ServerComms, Wallet]
 })

@@ -14,7 +14,7 @@
 <ion-content padding class="content">
 
     <div id="balance">
-        <div class = "button" style="display: inline-block; border-radius: 0.1em;">
+        <div class = "button" style="display: inline-block; border-radius: 0.1em;" [navPush]="wallet_page">
             <span style="float:left">{{principal_display}}</span>
             <span class="note" style="float:right">owed friends</span>
             <br>

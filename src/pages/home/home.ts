@@ -4,6 +4,7 @@ import {NavController, ToastController, AlertController} from 'ionic-angular';
 import {ConnectionsPage} from "../connections/connections";
 import {ServerComms} from "../../providers/server-comms";
 import {Wallet} from "../../providers/wallet";
+import {WalletPage} from "../wallet/wallet";
 
 
 @Component({
@@ -11,7 +12,6 @@ import {Wallet} from "../../providers/wallet";
   templateUrl: 'home.html'
 })
 export class HomePage {
-  // root_page = HomePage;
   offers = [];
   display_names = {}
   principal = 0
@@ -20,12 +20,14 @@ export class HomePage {
   interest_balance: String = ""
 
   connectionsPage;
+  wallet_page;
 
   constructor(public navCtrl: NavController, public comms: ServerComms, public toastCtrl: ToastController,
               private alertCtrl: AlertController, public walletProv: Wallet) {
     this.connectionsPage = ConnectionsPage
     this.principal_display = Wallet.displayAmount(this.principal)
     this.interest_balance = Number(0).toFixed(this.interest_digits)
+    this.wallet_page = WalletPage
 
     this.walletProv.setRefresher(this.balanceRefresherGen())
 
