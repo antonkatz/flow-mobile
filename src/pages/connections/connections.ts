@@ -20,6 +20,9 @@ export class ConnectionsPage {
   friends = []
 
   constructor(public comms: ServerComms, public toastCtrl: ToastController) {
+  }
+
+  ionViewWillEnter() {
     console.log("Looking up connected users")
     this.comms.sendToServer("/connections/get", null, data => {
       let r = data["response"]

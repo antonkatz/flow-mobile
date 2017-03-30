@@ -22,12 +22,7 @@ export class Wallet {
   private display_names = {}
   private timezone_offset = (new Date()).getTimezoneOffset() * 60 * 1000
 
-  constructor(public comms: ServerComms, public toastCtrl: ToastController) {
-    console.log('Hello Wallet Provider ' + this.identifier);
-
-    // setInterval()
-    // this.retrieveWallet()
-  }
+  constructor(public comms: ServerComms, public toastCtrl: ToastController) {}
 
   // private debug_timer = (new Date()).getTime()
 

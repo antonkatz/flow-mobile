@@ -24,14 +24,19 @@ export class HomePage {
 
   constructor(public navCtrl: NavController, public comms: ServerComms, public toastCtrl: ToastController,
               private alertCtrl: AlertController, public walletProv: Wallet) {
-    console.log("home page constructor")
+    // console.log("home page constructor")
     this.connectionsPage = ConnectionsPage
     this.principal_display = Wallet.displayAmount(this.principal)
     this.interest_balance = Number(0).toFixed(this.interest_digits)
     this.wallet_page = WalletPage
   }
 
+  // ionViewDidLoad() {
+  //   this.navCtrl.setRoot(HomePage)
+  // }
+
   ionViewWillEnter() {
+    console.log("home page entered", this.navCtrl.getViews())
     this.walletProv.setRefresher(this.balanceRefresherGen())
     this.walletProv.retrieveWallet()
 

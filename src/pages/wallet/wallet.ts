@@ -28,11 +28,10 @@ export class WalletPage {
 
   constructor(public navCtrl: NavController, public navParams: NavParams, public walletProv: Wallet,
   public registration: Registration) {
-    // this.principal_display = Wallet.displayAmount(this.principal)
-    // this.interest = Number(0).toFixed(this.interest_digits)
-    console.log("wallet page constructor")
+  }
 
-    registration.getUserId().then((id) => {
+  ionViewWillEnter() {
+    this.registration.getUserId().then((id) => {
       this.user_id = id
 
       this.walletProv.setRefresher(this.balanceRefresherGen())

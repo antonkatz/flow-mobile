@@ -5,6 +5,7 @@ import "rxjs/add/operator/map";
 import {RSA} from "../app/utils/rsa";
 import {Observable} from "rxjs";
 import aesjs from "aes-js";
+import has = Reflect.has;
 
 /**
  Singleton
@@ -13,11 +14,14 @@ import aesjs from "aes-js";
  */
 @Injectable()
 export class ServerComms {
-
-  // private static server_ip = "192.168.2.14"
-  private static server_ip = "localhost"
-  private static server_port = "8080"
-  private static server_address = "http://" + ServerComms.server_ip + ":" + ServerComms.server_port
+  // private static server_ip = "localhost"
+  // private static server_port = "8080"
+  // private static server_address = "http://" + ServerComms.server_ip + ":" + ServerComms.server_port
+  private static server_addresses = [
+    "http://192.168.2.14:8080", "http://192.168.2.13:8080", "http://localhost:8080"
+  ]
+  private static address_cycle = 0
+  private static server_address;
 
   /** current symmetric key. shared between all instances. could be invalid. */
   private static symmetric_key: Uint8Array = null
@@ -31,12 +35,26 @@ export class ServerComms {
       return ServerComms.self_instance
     }
 
+    ServerComms.server_address = ServerComms.server_addresses[ServerComms.address_cycle]
+
     ServerComms.rsa = new RSA(storage);
     ServerComms.self_instance = this
   }
 
   private static defaultHeaders(): {} {
     return {"Content-Type": "application/json"}
+  }
+
+  private static cycleThroughServerAddresses() {
+    ServerComms.address_cycle += 1
+    if (ServerComms.address_cycle < ServerComms.server_addresses.length) {
+      ServerComms.server_address = ServerComms.server_addresses[ServerComms.address_cycle]
+      console.log("cycling through addresses, next up", ServerComms.server_address)
+      return true
+    } else {
+      console.log("no more addresses to try")
+      return false
+    }
   }
 
   /** endpoint should have leading slash */
@@ -47,17 +65,36 @@ export class ServerComms {
 
     console.log("contacting server at", url, "with payload", json_payload)
 
+    // cycling through possible bootstrap addresses
+    let err_with_cycle = (er) => {
+      let is_no_connection = er["error_code"] && er["error_code"] == "no_connection"
+      let has_attempts = false
+      if (is_no_connection) {
+        has_attempts = ServerComms.cycleThroughServerAddresses()
+        console.log("no connection, trying a different address", has_attempts)
+        if (has_attempts) {
+          return this.sendToServer(endpoint, payload, success_callback, error_callback, force_public)
+        }
+      }
+
+      if (!is_no_connection || !has_attempts) {
+        if (error_callback) {
+          error_callback(er)
+        }
+      }
+    }
+
     if (!ServerComms.symmetric_key || force_public) {
       if (ServerComms.payloadFits(json_payload)) {
         this.sendAsymmetrically(url, json_payload).then((data) => {
-          data.subscribe(success_callback, error_callback)
-        }, error_callback)
+          data.subscribe(success_callback, err_with_cycle)
+        }, err_with_cycle)
       } else {
         console.log("payload does not fit")
         if (error_callback) error_callback({error_type: "not_able_to_send"})
       }
     } else if (ServerComms.user_id) {
-      this.sendSymmetrically(url, json_payload).subscribe(success_callback, error_callback)
+      this.sendSymmetrically(url, json_payload).subscribe(success_callback, err_with_cycle)
     } else {
       console.log("no sym key or user id AND payload does not fit")
       if (error_callback) error_callback({error_type: "not_able_to_send"})
@@ -84,8 +121,10 @@ export class ServerComms {
         if (error instanceof Response) {
           // no internet connection
           if (error.status == 0) {
-            parsed_error = {"error_code": "no_connection", "error_msg": "perhaps you are not connected to the" +
-            " internet" }
+             parsed_error = {
+                "error_code": "no_connection", "error_msg": "perhaps you are not connected to the" +
+                " internet"
+            }
           } else if (error.status == 401) {
             parsed_error = {"error_code": "missing_user", "error_msg": "perhaps you are not registered"}
           } else {
