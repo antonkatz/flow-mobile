@@ -1,7 +1,7 @@
 import { NgModule, ErrorHandler } from '@angular/core';
-import { Storage } from '@ionic/storage';
 import { IonicApp, IonicModule, IonicErrorHandler } from 'ionic-angular';
 import { MyApp } from './app.component';
+
 import { HomePage } from '../pages/home/home';
 import {RegisterPage} from "../pages/register/register";
 import {Registration} from "../providers/registration"
@@ -11,6 +11,10 @@ import {MainPage} from "../pages/main/main";
 import {CreateOfferPage} from "../pages/create-offer/create-offer";
 import {Wallet} from "../providers/wallet";
 import {WalletPage} from "../pages/wallet/wallet";
+
+import { IonicStorageModule } from '@ionic/storage';
+import { StatusBar } from '@ionic-native/status-bar';
+import { SplashScreen } from '@ionic-native/splash-screen';
 
 @NgModule({
   declarations: [
@@ -23,11 +27,8 @@ import {WalletPage} from "../pages/wallet/wallet";
     WalletPage
   ],
   imports: [
-    IonicModule.forRoot(MyApp, {},{
-      links: [
-        // { component: ConnectionsPage, name: 'Connections', segment: 'connections' }
-      ]
-    })
+    IonicModule.forRoot(MyApp),
+    IonicStorageModule.forRoot()
   ],
   bootstrap: [IonicApp],
   entryComponents: [
@@ -39,6 +40,10 @@ import {WalletPage} from "../pages/wallet/wallet";
     CreateOfferPage,
     WalletPage
   ],
-  providers: [{provide: ErrorHandler, useClass: IonicErrorHandler}, Storage, Registration, ServerComms, Wallet]
+  providers: [StatusBar,
+              SplashScreen,
+    {provide: ErrorHandler, useClass: IonicErrorHandler}, Registration, ServerComms, Wallet]
 })
-export class AppModule {}
+export class AppModule {
+
+}

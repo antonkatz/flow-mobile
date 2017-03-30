@@ -1,11 +1,13 @@
 import { Component, ViewChild} from '@angular/core';
 import { NavController, NavParams } from 'ionic-angular';
-import {Splashscreen, StatusBar} from "ionic-native";
+import { StatusBar } from '@ionic-native/status-bar';
+import { SplashScreen } from '@ionic-native/splash-screen';
 import {RegisterPage} from "../register/register";
 import {HomePage} from "../home/home";
 import {Registration} from "../../providers/registration";
 import {ConnectionsPage} from "../connections/connections";
 import {WalletPage} from "../wallet/wallet";
+import { Storage } from '@ionic/storage';
 
 /*
   Generated class for the Main page.
@@ -22,21 +24,28 @@ export class MainPage {
   connections_page
   wallet_page
 
-  constructor(public navCtrl: NavController, public navParams: NavParams, registration: Registration) {
+  constructor(public navCtrl: NavController, public navParams: NavParams, public storage: Storage,
+              public statusBar: StatusBar,
+              public splashScreen: SplashScreen,
+              registration: Registration) {
     this.connections_page = ConnectionsPage
     this.wallet_page = WalletPage
-    // this.rootPage = null
 
-    registration.handshake((is_registered: boolean) => {
-      console.log("is registered", is_registered)
-      if (is_registered) {
-        this.rootPage = HomePage
-      } else {
-        this.rootPage = RegisterPage;
-      }
+    // this.rootPage = RegisterPage
+    console.log('main page')
+    this.storage.ready().then(() => {
+      console.log('main page storage')
+      registration.handshake((is_registered: boolean) => {
+        console.log("main page is registered " + is_registered)
+        if (is_registered) {
+          this.rootPage = HomePage
+        } else {
+          this.rootPage = RegisterPage;
+        }
 
-      StatusBar.styleDefault();
-      Splashscreen.hide();
+        this.statusBar.styleDefault();
+        this.splashScreen.hide();
+      })
     })
   }
 

@@ -35,7 +35,7 @@ export class Registration {
         ServerComms.errorToast(this.toastCtrl, error["error_msg"])
       }
       callback(false)
-    }, /* force public*/ true)
+    }, /* force public*/ true, /* timeout for android */ 1000)
   }
 
   register(desired_name: string, invitation_code: string, callback?: () => void) {
@@ -59,7 +59,7 @@ export class Registration {
   /** not only stores it, but also sets it in server communications module */
   setUserId(id: string) {
     this.storage.set(Registration.storage_user_id, id)
-    console.log("user id", id)
+    console.log("user id [registration]" + id)
     ServerComms.setUserId(id)
   }
 

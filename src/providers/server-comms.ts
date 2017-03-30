@@ -28,6 +28,7 @@ export class ServerComms {
   private static self_instance: ServerComms = null
   private static rsa = null
   private static user_id = null
+  private static global_timeout = 20000
 
   constructor(public http: Http, public storage: Storage) {
     if (ServerComms.self_instance) {
@@ -59,11 +60,11 @@ export class ServerComms {
 
   /** endpoint should have leading slash */
   sendToServer(endpoint: string, payload: any, success_callback: (data: {}) => void,
-               error_callback?: (er: any) => void, force_public?: boolean) {
+               error_callback?: (er: any) => void, force_public?: boolean, timeout?) {
     let url = ServerComms.server_address + endpoint
     let json_payload = JSON.stringify(payload)
 
-    console.log("contacting server at", url, "with payload", json_payload)
+    console.log("contacting server at " + url + "with payload", json_payload)
 
     // cycling through possible bootstrap addresses
     let err_with_cycle = (er) => {
@@ -71,9 +72,9 @@ export class ServerComms {
       let has_attempts = false
       if (is_no_connection) {
         has_attempts = ServerComms.cycleThroughServerAddresses()
-        console.log("no connection, trying a different address", has_attempts)
+        console.log("no connection, trying a different address " + has_attempts)
         if (has_attempts) {
-          return this.sendToServer(endpoint, payload, success_callback, error_callback, force_public)
+          return this.sendToServer(endpoint, payload, success_callback, error_callback, force_public, timeout)
         }
       }
 
@@ -86,7 +87,7 @@ export class ServerComms {
 
     if (!ServerComms.symmetric_key || force_public) {
       if (ServerComms.payloadFits(json_payload)) {
-        this.sendAsymmetrically(url, json_payload).then((data) => {
+        this.sendAsymmetrically(url, json_payload, timeout).then((data) => {
           data.subscribe(success_callback, err_with_cycle)
         }, err_with_cycle)
       } else {
@@ -101,11 +102,11 @@ export class ServerComms {
     }
   }
 
-  static setUserId(id:string) {
+  static setUserId(id: string) {
     ServerComms.user_id = id
   }
 
-  private sendAsymmetrically(url: string, payload: string): Promise<Observable<{}>> {
+  private sendAsymmetrically(url: string, payload: string, timeout?): Promise<Observable<{}>> {
     let headers = ServerComms.defaultHeaders()
 
     return ServerComms.rsa.getPubKey().then((pub_key) => {
@@ -113,35 +114,37 @@ export class ServerComms {
       headers["public_key"] = btoa(pub_key)
       let config: RequestOptionsArgs = {headers: new Headers(headers)}
       let ebody = ServerComms.rsa.parseForServer(payload)
-      return this.http.post(url, ebody, config).map(response => {
-        ServerComms.setSymmetricKey(ServerComms.extractSymmetricKey(response))
-        return ServerComms.parseSymmetricallyEncrypted(response)
-      }).catch((error: Response | any) => {
-        let parsed_error = {}
-        if (error instanceof Response) {
+      return this.http.post(url, ebody, config)
+        .timeout(timeout ? timeout : ServerComms.global_timeout)
+        .map(response => {
+          ServerComms.setSymmetricKey(ServerComms.extractSymmetricKey(response))
+          return ServerComms.parseSymmetricallyEncrypted(response)
+        }).catch((error: Response | any) => {
+          let parsed_error = {}
           // no internet connection
-          if (error.status == 0) {
-             parsed_error = {
-                "error_code": "no_connection", "error_msg": "perhaps you are not connected to the" +
-                " internet"
+          if (((error instanceof Response) && error.status == 0) || (error.name && error.name === "TimeoutError")) {
+            parsed_error = {
+              "error_code": "no_connection", "error_msg": "perhaps you are not connected to the" +
+              " internet"
             }
-          } else if (error.status == 401) {
-            parsed_error = {"error_code": "missing_user", "error_msg": "perhaps you are not registered"}
+          } else if (error instanceof Response) {
+            if (error.status == 401) {
+              parsed_error = {"error_code": "missing_user", "error_msg": "perhaps you are not registered"}
+            } else {
+              ServerComms.setSymmetricKey(ServerComms.extractSymmetricKey(error))
+              console.log("sym key", ServerComms.symmetric_key)
+              let body = ServerComms.parseSymmetricallyEncrypted(error)
+              parsed_error = body
+            }
           } else {
-            ServerComms.setSymmetricKey(ServerComms.extractSymmetricKey(error))
-            console.log("sym key", ServerComms.symmetric_key)
-            let body = ServerComms.parseSymmetricallyEncrypted(error)
-            parsed_error = body
+            parsed_error = {
+              "error_code": "unknown_error" || "",
+              "error_msg": "something went wrong and we don't know what happened"
+            }
+            console.log("unknown error during comms that is not a response", error)
           }
-        } else {
-          parsed_error = {
-            "error_code": "unknown_error" || "",
-            "error_msg": "something went wrong and we don't know what happened"
-          }
-          console.log("unknown error during comms that is not a response", error)
-        }
-        return Observable.throw(parsed_error)
-      })
+          return Observable.throw(parsed_error)
+        })
     })
   }
 
@@ -163,9 +166,9 @@ export class ServerComms {
       console.log("Error during symmetric communications", error)
 
       let parsed_error: {} = {
-          "error_code": "unknown_error" || "",
-          "error_msg": "something went wrong and we don't know what happened"
-        }
+        "error_code": "unknown_error" || "",
+        "error_msg": "something went wrong and we don't know what happened"
+      }
       if (error instanceof Response) {
         ServerComms.setSymmetricKey(ServerComms.extractSymmetricKey(error))
 
@@ -174,8 +177,10 @@ export class ServerComms {
           console.log("The server is missing symmetric key, re-running")
           if (first_attempt) return this.sendSymmetrically(url, payload, false)
         } else if (error.status == 0) {
-          parsed_error = {"error_code": "no_connection", "error_msg": "perhaps you are not connected to the" +
-          " internet" }
+          parsed_error = {
+            "error_code": "no_connection", "error_msg": "perhaps you are not connected to the" +
+            " internet"
+          }
         } else {
           if (ServerComms.symmetric_key) {
             let body = ServerComms.parseSymmetricallyEncrypted(error)
@@ -215,7 +220,7 @@ export class ServerComms {
 
   private static generateIv(): Array<number> {
     let iv = []
-    for (let i=0;i<16;i++) {
+    for (let i = 0; i < 16; i++) {
       iv[i] = Math.ceil(Math.random() * 255)
     }
     return iv
@@ -258,7 +263,7 @@ export class ServerComms {
   }
 
   static errorToast(toastCtrl, given_msg?: string) {
-    let msg =  given_msg || "oops... something went wrong and we don't know what"
+    let msg = given_msg || "oops... something went wrong and we don't know what"
     let toast = toastCtrl.create({
       message: msg,
       position: 'top',
