@@ -3,7 +3,7 @@
   <name>Flow</name>
   <description>Financial independence app</description>
   <author email="antonkats@gmail.com" href="http://ionicframework.com/">Flow team</author>
-  <content src="index.html"/>
+  <content src="index.html" />
   <access origin="*"/>
   <allow-intent href="http://*/*"/>
   <allow-intent href="https://*/*"/>
@@ -36,6 +36,5 @@
   <plugin name="cordova-plugin-device" spec="1.1.4"/>
   <plugin name="cordova-plugin-splashscreen" spec="~4.0.1"/>
   <plugin name="cordova-sqlite-storage" spec="~2.0.2"/>
-  <engine name="android" spec="~6.1.1"/>
-  <allow-navigation href="http://192.168.2.13:8100"/>
+  <engine name="android" spec="~6.1.2"/>
 </widget>
