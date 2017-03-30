@@ -24,12 +24,16 @@ export class HomePage {
 
   constructor(public navCtrl: NavController, public comms: ServerComms, public toastCtrl: ToastController,
               private alertCtrl: AlertController, public walletProv: Wallet) {
+    console.log("home page constructor")
     this.connectionsPage = ConnectionsPage
     this.principal_display = Wallet.displayAmount(this.principal)
     this.interest_balance = Number(0).toFixed(this.interest_digits)
     this.wallet_page = WalletPage
+  }
 
+  ionViewWillEnter() {
     this.walletProv.setRefresher(this.balanceRefresherGen())
+    this.walletProv.retrieveWallet()
 
     this.comms.sendToServer("/offers/get", null, data => {
       let r = data["response"]
@@ -40,7 +44,7 @@ export class HomePage {
         let newo = o
         newo["display_hours"] = Wallet.displayAmount(o["hours"])
         return newo
-        })
+      })
 
       // now resolving display names
       let ids = this.offers.map(o => o["from_user_id"])
@@ -64,6 +68,7 @@ export class HomePage {
   balanceRefresherGen() {
     let cthis = this
     return (wP) => {
+      console.log("home page wallet callback")
       cthis.principal = wP.getPrincipal()
       cthis.principal_display = Wallet.displayAmount(cthis.principal)
       cthis.interest_balance = wP.getInterest().toFixed(cthis.interest_digits)

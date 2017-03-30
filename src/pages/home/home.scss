@@ -20,7 +20,7 @@ page-home {
     margin-left: 1em;
     color: #869635;
   }
-  ion-icon {
+  ion-icon.help {
     //font-size: 1em;
     opacity: 0.7;
   }
@@ -42,17 +42,17 @@ page-home {
   //#offers .item-inner {
   //  border-color: rgba(255, 255, 255, 0.3);
   //}
-  #offers ion-list-header {
-    font-size: 1.5em;
-    background: #171e1f;
-    color: color($app-colors, header);
-    margin-bottom: 0;
-  }
-  .list-header-md {
-    border-top: none;
-  }
+  //#offers ion-list-header {
+  //  font-size: 1.5em;
+  //  background: #171e1f;
+  //  color: color($app-colors, header);
+  //  margin-bottom: 0;
+  //}
+  //.list-header-md {
+  //  border-top: none;
+  //}
   #offers .help {
-    font-size: 0.7em;
+    //font-size: 0.7em;
     margin-left: 0.7em;
   }
   //#offers .user-name {

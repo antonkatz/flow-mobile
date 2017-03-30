@@ -30,11 +30,11 @@ export class MainPage {
       console.log("is registered", is_registered)
       if (is_registered) {
         this.rootPage = HomePage;
+        // this.rootPage = WalletPage;
       } else {
         this.rootPage = RegisterPage;
       }
 
-      this.navCtrl.push(WalletPage)
       StatusBar.styleDefault();
       Splashscreen.hide();
     })

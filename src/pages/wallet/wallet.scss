@@ -1,3 +1,11 @@
 page-wallet {
-
+  .amount.outflow {
+    color: color($app-colors, balance-bright);
+  }
+  .amount.inflow {
+    color: color($colors, primary);
+  }
+  .amount {
+    float: right;
+  }
 }

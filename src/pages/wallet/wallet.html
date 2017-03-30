@@ -6,42 +6,71 @@
 -->
 <ion-header>
 
-  <ion-navbar>
-    <ion-title>wallet</ion-title>
-  </ion-navbar>
+    <ion-navbar>
+        <ion-title>wallet</ion-title>
+    </ion-navbar>
 
 </ion-header>
 
 
 <ion-content padding>
 
-  <ion-item>
+    <ion-item>
+        <ion-label color="primary">total balance</ion-label>
+        <span clear item-right>{{total_display}}</span>
+    </ion-item>
+
     <ion-row>
-      <ion-col width-50>
-    <ion-label color="primary">total balance</ion-label>
-      </ion-col>
-      <ion-col>
-    <span clear>{{total_balance}}</span>
-      </ion-col>
+        <ion-col width-50>
+            <ion-item>
+                <ion-label color="primary" stacked>principal</ion-label>
+                <!-- todo. this does not need to be two way -->
+                <ion-input [(ngModel)]="principal" disabled="true"></ion-input>
+            </ion-item>
+        </ion-col>
+        <ion-col width-50>
+            <ion-item>
+                <ion-label color="primary" stacked>interest</ion-label>
+                <!-- todo. this does not need to be two way -->
+                <ion-input [(ngModel)]="interest_display" disabled="true"></ion-input>
+            </ion-item>
+        </ion-col>
     </ion-row>
-  </ion-item>
-  <ion-row>
-    <ion-col width-50>
-      <ion-item>
-
-      </ion-item>
-    </ion-col>
-  </ion-row>
 
 
-  <div id="balance" [navPush]="wallet_page">
-    <div class = "button" style="display: inline-block; border-radius: 0.1em;">
-      <span style="float:left">{{principal_display}}</span>
-      <span class="note" style="float:right">owed friends</span>
-      <br>
-      <span style="float: left">+ {{interest_balance}}</span>
-    </div>
-    <span class="help"><ion-icon name="help-circle"></ion-icon></span>
-  </div>
+    <ion-list style="margin-top: 2em">
+        <ion-list-header>
+            recent transactions
+        </ion-list-header>
+
+        <ion-note *ngIf="transactions.length == 0" style="text-align: center; padding: 1em; display:block">
+            you haven't made any transactions yet
+        </ion-note>
+
+        <ng-container *ngFor="let tr of transactions">
+            <ion-item>
+                <ion-avatar item-left clear>
+                    <img *ngIf="tr.from_user_id != user_id"
+                         src="https://www.gravatar.com/avatar/{{md5(tr.from_user_id)}}?s=32&d=identicon&r=PG"/>
+                    <img *ngIf="tr.to_user_id != user_id"
+                         src="https://www.gravatar.com/avatar/{{md5(tr.to_user_id)}}?s=32&d=identicon&r=PG"/>
+                </ion-avatar>
+
+                <div item-content style="display:flex; justify-content: flex-end; flex-wrap: wrap; flex-basis: 100%">
+                    <p style="flex-basis: 100%">
+                        <span *ngIf="tr.from_user_id != user_id" class="display-name">{{tr.from_display_name}}</span>
+                        <span *ngIf="tr.to_user_id != user_id" class="display-name">{{tr.to_display_name}}</span>
+                        <span *ngIf="tr.from_user_id != user_id" class="amount inflow">+{{tr.amount}}</span>
+                        <span *ngIf="tr.to_user_id != user_id" class="amount outflow">-{{tr.amount}}</span>
+                    </p>
+                    <p>
+                        <ion-datetime style="padding:0; opacity:1" displayFormat="DD.MM.YYYY HH:mm" disabled="true"
+                                      [(ngModel)]="tr.display_date"></ion-datetime>
+                    </p>
+                </div>
+
+            </ion-item>
+        </ng-container>
+    </ion-list>
 
 </ion-content>

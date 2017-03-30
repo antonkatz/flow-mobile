@@ -19,11 +19,14 @@ export class Wallet {
   private identifier = Math.round(Math.random() * 100)
   private interval_id = null
 
+  private display_names = {}
+  private timezone_offset = (new Date()).getTimezoneOffset() * 60 * 1000
+
   constructor(public comms: ServerComms, public toastCtrl: ToastController) {
     console.log('Hello Wallet Provider ' + this.identifier);
 
     // setInterval()
-    this.retrieveWallet()
+    // this.retrieveWallet()
   }
 
   // private debug_timer = (new Date()).getTime()
@@ -56,14 +59,6 @@ export class Wallet {
     this.wallet["uncommitted_interest"] += (this.getPrincipal() + this.getInterest()) * (this.interest_rate - 1)
   }
 
-  getPrincipal() {
-    return this.wallet["principal"]
-  }
-
-  getInterest() {
-    return this.wallet["interest"] + this.wallet["uncommitted_interest"]
-  }
-
   setRefresher(callback) {
     this.callback = callback
   }
@@ -71,10 +66,44 @@ export class Wallet {
   setWallet(w) {
     if (w) {
       this.wallet = w
+      this.retrieveDisplayNames()
+      this.processDates()
       if (this.callback) {
         this.callback(this)
       }
     }
+  }
+
+  processDates() {
+    this.wallet["transactions"] = this.wallet["transactions"].map(t => {
+      let newt = t
+      newt["display_date"] = new Date(t["timestamp"] - this.timezone_offset).toISOString()
+      return newt
+    })
+
+    console.log("dates ", this.wallet["transactions"])
+  }
+
+  retrieveDisplayNames() {
+    // now resolving display names
+    let ids = []
+    this.wallet['transactions'].forEach(o => {
+      ids.push(o["from_user_id"], o["to_user_id"])
+    })
+    this.comms.sendToServer("/connections/resolve-to-name", ids, data => {
+      data["response"].map(n => this.display_names[n[0]] = n[1])
+      console.log("display names resolved", this.display_names)
+      this.wallet["transactions"] = this.wallet["transactions"].map(t => {
+        let newt = t
+        newt["from_display_name"] = this.display_names[t["from_user_id"]]
+        newt["to_display_name"] = this.display_names[t["to_user_id"]]
+        return newt
+      })
+
+    }, error => {
+      console.log("error during retrieving offers", error);
+      ServerComms.errorToast(this.toastCtrl, error["error_msg"])
+    })
   }
 
   commitTransaction(id, action, callback, toast_msg_func) {
@@ -105,12 +134,15 @@ export class Wallet {
     })
   }
 
-  retrieveWallet() {
+  retrieveWallet(callback?) {
     this.comms.sendToServer("/wallet/get", null, data => {
       let wallet = data["response"]
       console.log("wallet contents", wallet)
       if (wallet) {
         this.setWallet(wallet)
+        if (callback) {
+          callback()
+        }
       } else {
         ServerComms.errorToast(this.toastCtrl, "we could not load your walletProv")
       }
@@ -120,11 +152,29 @@ export class Wallet {
     })
   }
 
-  static displayAmount(amount: number) {
+  /* getters */
+
+  getPrincipal() {
+    return this.wallet["principal"]
+  }
+
+  getInterest() {
+    return this.wallet["interest"] + this.wallet["uncommitted_interest"]
+  }
+
+  getTransactions() {
+    return this.wallet["transactions"]
+  }
+
+  static displayAmount(amount: number, fixto?: number) {
     var suffix = "hours"
     if (amount == 1) {
       suffix = "hour"
     }
-    return amount + " " + suffix
+    let a = amount.toString()
+    if (fixto) {
+      a = amount.toFixed(fixto)
+    }
+    return a + " " + suffix
   }
 }

@@ -22,9 +22,12 @@ export class CreateOfferPage {
 
   constructor(public navCtrl: NavController, public navParams: NavParams, public toastCtrl: ToastController,
               public comms: ServerComms) {
-    console.log("nav params", navParams.data)
-    this.user_id = navParams.get('user_id') || ""
-    this.display_name = navParams.get('display_name') || ""
+  }
+
+  ionViewWillEnter() {
+    console.log("nav params", this.navParams.data)
+    this.user_id = this.navParams.get('user_id') || ""
+    this.display_name = this.navParams.get('display_name') || ""
   }
 
   offerHelp() {
