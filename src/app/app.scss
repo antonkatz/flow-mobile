@@ -20,7 +20,8 @@ $app-colors: (
         balance-bright: #abbf43,
         text: whitesmoke,
         header: rgba(255, 255, 255, 0.71),
-        bg: #171e1f
+        bg: #171e1f,
+        dark-bg: #0f1314
 );
 
 .scroll-content {
@@ -60,10 +61,21 @@ ion-label[stacked], ion-label[floating] {
   font-size: 1.5rem !important;
 }
 
-
-
 .error-toast .toast-wrapper {
   //border: 1px solid color($colors, danger);
   box-shadow: 0 0 10px 2px color($colors, danger);
   border-top: none;
+}
+
+ion-app {
+  max-width: 600px;
+  margin-left:auto;
+  margin-right:auto;
+  position: relative;
+  left: auto;
+  right: auto;
+}
+
+body {
+  background: color($app-colors, dark-bg);
 }

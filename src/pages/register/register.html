@@ -17,13 +17,30 @@
   <ion-item>
     <!-- in the form of words concatecated together horse-boy-play-->
     <ion-label stacked>invitation code</ion-label>
-    <ion-textarea rows="4" [(ngModel)]="invitation_code"></ion-textarea>
+    <ion-textarea rows="3" [(ngModel)]="invitation_code"></ion-textarea>
   </ion-item>
   <ion-item>
     <ion-label stacked>your name</ion-label>
     <ion-input type="text" [(ngModel)]="name"></ion-input>
   </ion-item>
-  <p text-center>
+  <p text-center *ngIf = "!has_key">
     <button ion-button color="primary" (click) = "register(name,invitation_code)">register</button>
   </p>
+
+  <p text-center style="margin-top: 2em">
+    <ion-note *ngIf = "!has_key" >use this option if you have already registered</ion-note><br>
+    <button *ngIf = "!has_key" ion-button color="primary-dark" (click) = "hasKey(true)">use
+      existing
+      cryptographic
+      key</button>
+    <ion-item *ngIf = "has_key">
+      <ion-label stacked>private key in pem format (include `begin` and `end` bits)</ion-label>
+      <ion-textarea rows="4" [(ngModel)]="existing_key"></ion-textarea>
+    </ion-item>
+
+    <button *ngIf = "has_key" ion-button color="primary" (click) = "registerWithKey()">try this key</button>
+    <button outline *ngIf = "has_key" ion-button color="danger" (click) = "hasKey(false)">cancel</button>
+
+  </p>
+
 </ion-content>

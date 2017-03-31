@@ -8,6 +8,7 @@ import {Registration} from "../../providers/registration";
 import {ConnectionsPage} from "../connections/connections";
 import {WalletPage} from "../wallet/wallet";
 import { Storage } from '@ionic/storage';
+import {GreetingPage} from "../greeting/greeting";
 
 /*
   Generated class for the Main page.
@@ -20,7 +21,7 @@ import { Storage } from '@ionic/storage';
   templateUrl: 'main.html'
 })
 export class MainPage {
-  rootPage;
+  rootPage:any;
   connections_page
   wallet_page
 
@@ -31,7 +32,9 @@ export class MainPage {
     this.connections_page = ConnectionsPage
     this.wallet_page = WalletPage
 
-    // this.rootPage = RegisterPage
+    // this.rootPage = MainPage
+    this.rootPage = GreetingPage
+
     console.log('main page')
     this.storage.ready().then(() => {
       console.log('main page storage')
@@ -39,8 +42,11 @@ export class MainPage {
         console.log("main page is registered " + is_registered)
         if (is_registered) {
           this.rootPage = HomePage
+          // this.navCtrl.setRoot(HomePage)
+
         } else {
           this.rootPage = RegisterPage;
+          // this.navCtrl.setRoot(RegisterPage)
         }
 
         this.statusBar.styleDefault();

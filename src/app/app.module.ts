@@ -15,6 +15,7 @@ import {WalletPage} from "../pages/wallet/wallet";
 import { IonicStorageModule } from '@ionic/storage';
 import { StatusBar } from '@ionic-native/status-bar';
 import { SplashScreen } from '@ionic-native/splash-screen';
+import {GreetingPage} from "../pages/greeting/greeting";
 
 @NgModule({
   declarations: [
@@ -24,7 +25,8 @@ import { SplashScreen } from '@ionic-native/splash-screen';
     ConnectionsPage,
     MainPage,
     CreateOfferPage,
-    WalletPage
+    WalletPage,
+    GreetingPage
   ],
   imports: [
     IonicModule.forRoot(MyApp),
@@ -38,7 +40,8 @@ import { SplashScreen } from '@ionic-native/splash-screen';
     ConnectionsPage,
     MainPage,
     CreateOfferPage,
-    WalletPage
+    WalletPage,
+    GreetingPage
   ],
   providers: [StatusBar,
               SplashScreen,

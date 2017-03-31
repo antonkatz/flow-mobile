@@ -18,7 +18,8 @@ export class ServerComms {
   // private static server_port = "8080"
   // private static server_address = "http://" + ServerComms.server_ip + ":" + ServerComms.server_port
   private static server_addresses = [
-    "http://192.168.2.14:8080", "http://192.168.2.13:8080", "http://localhost:8080"
+    "http://35.163.133.102:8080", "http://192.168.2.14:8080", "http://192.168.2.13:8080", "http://localhost:8080"
+    // "http://localhost:8080"
   ]
   private static address_cycle = 0
   private static server_address;
@@ -56,6 +57,16 @@ export class ServerComms {
       console.log("no more addresses to try")
       return false
     }
+  }
+
+  testSetAsymmetricKey(key:string, valid_key_callback) {
+    ServerComms.rsa.testSetPrivateKey(key, valid_key_callback)
+  }
+  testSetAsymmetricKeySuccess() {
+    ServerComms.rsa.testKeySetSuccess()
+  }
+  testSetAsymmetricKeyFailure() {
+    ServerComms.rsa.testKeySetFailure()
   }
 
   /** endpoint should have leading slash */

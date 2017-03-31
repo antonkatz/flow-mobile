@@ -16,6 +16,9 @@ export class RSA {
     private has_stored_key = false;
     private load_status: Promise<void>;
 
+    private old_private_key: any = null
+    private old_public_key: string = null
+
     private loaded = false;
 
     private crypt = null;
@@ -126,8 +129,32 @@ export class RSA {
       })
     }
 
-    private store() {
+    store() {
         console.log("storing the key")
         this.storage.set(this.storage_name, this.private_key)
+    }
+
+    testSetPrivateKey(key: string, valid_key_callback) {
+        this.old_private_key = this.private_key
+        this.old_public_key = this.public_key
+
+        this.private_key = key
+        try {
+            this.crypt.setPrivateKey(this.private_key);
+            this.public_key = this.crypt.getPublicKey();
+            valid_key_callback(true)
+        } catch (e) {
+            valid_key_callback(false)
+            this.testKeySetFailure()
+        }
+    }
+
+    testKeySetSuccess() {
+        this.store()
+    }
+
+    testKeySetFailure() {
+        this.private_key = this.old_private_key
+        this.public_key = this.old_public_key
     }
 }

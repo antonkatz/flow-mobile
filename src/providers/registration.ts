@@ -38,6 +38,23 @@ export class Registration {
     }, /* force public*/ true, /* timeout for android */ 1000)
   }
 
+  tryKey(key: string, callback: (boolean)=>void, invalid_key_callback) {
+    this.comms.testSetAsymmetricKey(key, (key_valid) => {
+      if (key_valid) {
+        this.handshake((success) => {
+          if (success) {
+            this.comms.testSetAsymmetricKeySuccess()
+          } else {
+            this.comms.testSetAsymmetricKeyFailure()
+          }
+          callback(success)
+        })
+      } else {
+        invalid_key_callback()
+      }
+    })
+  }
+
   register(desired_name: string, invitation_code: string, callback?: () => void) {
     console.log("Trying to register with ", desired_name, invitation_code)
 
