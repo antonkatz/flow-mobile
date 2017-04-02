@@ -27,11 +27,11 @@
 
     <ion-item>
         <ion-label color="primary">how many hours</ion-label>
-        <ion-input type="number" min="0.5" value="{{hours}}" step="0.5" mode="md">
+        <ion-input type="number" min="0.5" [(ngModel)]="hours" step="0.5">
         </ion-input>
         <div clear item-right>
-            <button ion-button><ion-icon name="add-circle" (click)="increaseHours()"></ion-icon></button>
-            <button ion-button><ion-icon name="remove-circle" (click)="decreaseHours()"></ion-icon></button>
+            <button ion-button (click)="increaseHours()"><ion-icon name="add-circle"></ion-icon></button>
+            <button ion-button (click)="decreaseHours()"><ion-icon name="remove-circle"></ion-icon></button>
         </div>
     </ion-item>
     <ion-item>

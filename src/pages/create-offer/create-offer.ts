@@ -25,7 +25,6 @@ export class CreateOfferPage {
   }
 
   ionViewWillEnter() {
-    console.log("nav params", this.navParams.data)
     this.user_id = this.navParams.get('user_id') || ""
     this.display_name = this.navParams.get('display_name') || ""
   }
@@ -57,6 +56,7 @@ export class CreateOfferPage {
   }
 
   increaseHours() {
+    console.log("increasing hours", this.hours )
     this.hours += 0.5
   }
   decreaseHours() {

@@ -83,3 +83,7 @@ body {
 textarea {
   resize: none;
 }
+
+input[type=number] {
+  -moz-appearance:textfield;
+}
