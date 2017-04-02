@@ -1,15 +1,17 @@
-import {Component} from '@angular/core';
+import {Component, enableProdMode} from '@angular/core';
 import {Platform} from 'ionic-angular';
 
 import {MainPage} from "../pages/main/main";
 import {GreetingPage} from "../pages/greeting/greeting";
+
+enableProdMode();
 
 @Component({
     templateUrl: 'app.html'
 })
 export class MyApp {
     rootPage:any = GreetingPage;
-
+  
     constructor(platform: Platform) {
       platform.ready().then(() => {
         console.log("platform ready")
