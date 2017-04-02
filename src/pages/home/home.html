@@ -53,10 +53,11 @@
 
                 <p class="options">
                     <button ion-button color="secondary" outline (click)="completeOffer(offer.offer_id)"
-                            style="float: left">
+                            style="float: right">
                         complete
                     </button>
-                    <button ion-button color="danger" outline (click)="rejectOffer(offer.offer_id)">reject</button>
+                    <button ion-button color="danger" outline (click)="rejectOffer(offer.offer_id)"
+                            style="float: left">reject</button>
                 </p>
             </ion-item>
         </ion-list>

@@ -87,3 +87,7 @@ textarea {
 input[type=number] {
   -moz-appearance:textfield;
 }
+
+.alert-message {
+  overflow-y: auto;
+}

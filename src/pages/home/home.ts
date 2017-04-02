@@ -84,7 +84,7 @@ export class HomePage {
     let offer = this.offers.filter((o) => o["offer_id"] == id)[0]
     let hours = offer["hours"]
     let from_user = this.display_names[offer["from_user_id"]]
-    let prompt_text = "you want to accept " + Wallet.displayAmount(hours)
+    let prompt_text = "you are confirming these " + Wallet.displayAmount(hours)
 
     let cthis = this
     let toast_msg_func = (resp) => {

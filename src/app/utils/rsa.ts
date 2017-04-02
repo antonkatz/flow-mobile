@@ -62,11 +62,20 @@ export class RSA {
             return Promise.resolve(this.public_key);
         }
         return this.load_status.then(() => {
-            console.log("key put in cache")
+            console.log("key put in cache", this.public_key)
             this.loaded = true;
             return this.public_key
         }, (error) => {
-            console.log("there is no key", error)
+            console.log("there is no public key", error)
+            return null;
+        })
+    }
+
+    getPrivateKey() {
+        return this.load_status.then(() => {
+            return this.private_key
+        }, (error) => {
+            console.log("there is no private key", error)
             return null;
         })
     }

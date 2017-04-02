@@ -9,6 +9,7 @@ import {ConnectionsPage} from "../connections/connections";
 import {WalletPage} from "../wallet/wallet";
 import { Storage } from '@ionic/storage';
 import {GreetingPage} from "../greeting/greeting";
+import {KeyDownloadPage} from "../key-download/key-download";
 
 /*
   Generated class for the Main page.
@@ -24,6 +25,7 @@ export class MainPage {
   rootPage:any;
   connections_page
   wallet_page
+  key_download_page
 
   constructor(public navCtrl: NavController, public navParams: NavParams, public storage: Storage,
               public statusBar: StatusBar,
@@ -31,7 +33,7 @@ export class MainPage {
               registration: Registration) {
     this.connections_page = ConnectionsPage
     this.wallet_page = WalletPage
-
+    this.key_download_page = KeyDownloadPage
     // this.rootPage = MainPage
     this.rootPage = GreetingPage
 
@@ -42,8 +44,7 @@ export class MainPage {
         console.log("main page is registered " + is_registered)
         if (is_registered) {
           this.rootPage = HomePage
-          // this.navCtrl.setRoot(HomePage)
-
+          // this.rootPage = this.key_download_page
         } else {
           this.rootPage = RegisterPage;
           // this.navCtrl.setRoot(RegisterPage)

@@ -16,6 +16,7 @@ import { IonicStorageModule } from '@ionic/storage';
 import { StatusBar } from '@ionic-native/status-bar';
 import { SplashScreen } from '@ionic-native/splash-screen';
 import {GreetingPage} from "../pages/greeting/greeting";
+import {KeyDownloadPage} from "../pages/key-download/key-download";
 
 @NgModule({
   declarations: [
@@ -26,7 +27,8 @@ import {GreetingPage} from "../pages/greeting/greeting";
     MainPage,
     CreateOfferPage,
     WalletPage,
-    GreetingPage
+    GreetingPage,
+    KeyDownloadPage
   ],
   imports: [
     IonicModule.forRoot(MyApp),
@@ -41,7 +43,8 @@ import {GreetingPage} from "../pages/greeting/greeting";
     MainPage,
     CreateOfferPage,
     WalletPage,
-    GreetingPage
+    GreetingPage,
+    KeyDownloadPage
   ],
   providers: [StatusBar,
               SplashScreen,

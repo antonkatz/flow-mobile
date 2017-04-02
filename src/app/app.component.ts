@@ -2,12 +2,13 @@ import {Component} from '@angular/core';
 import {Platform} from 'ionic-angular';
 
 import {MainPage} from "../pages/main/main";
+import {GreetingPage} from "../pages/greeting/greeting";
 
 @Component({
     templateUrl: 'app.html'
 })
 export class MyApp {
-    rootPage:any = null;
+    rootPage:any = GreetingPage;
 
     constructor(platform: Platform) {
       platform.ready().then(() => {

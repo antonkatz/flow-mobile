@@ -1,8 +1,9 @@
-import {Component} from '@angular/core';
-import {NavController, NavParams, ToastController} from 'ionic-angular';
+import {Component} from "@angular/core";
+import {NavController, ToastController} from "ionic-angular";
 import {Registration} from "../../providers/registration";
 import {HomePage} from "../home/home";
 import {ServerComms} from "../../providers/server-comms";
+import {KeyDownloadPage} from "../key-download/key-download";
 
 /*
  Generated class for the Register page.
@@ -12,35 +13,37 @@ import {ServerComms} from "../../providers/server-comms";
  */
 
 @Component({
-    selector: 'page-register',
-    templateUrl: 'register.html'
+  selector: 'page-register',
+  templateUrl: 'register.html'
 })
 export class RegisterPage {
-    has_key = false
-    existing_key = ""
+  has_key = false
+  existing_key = ""
 
-    constructor(public navCtrl: NavController, public toastCtrl: ToastController, public registrar: Registration) {
-    }
+  constructor(public navCtrl: NavController, public toastCtrl: ToastController, public registrar: Registration) {
+  }
 
-    register(desired_name: string, invitation_code: string) {
-        this.registrar.register(desired_name, invitation_code, () => {
-          this.navCtrl.push(HomePage)
-        })
-    }
+  register(desired_name: string, invitation_code: string) {
+    this.registrar.register(desired_name, invitation_code, () => {
+      this.navCtrl.setRoot(HomePage)
+      // setting key download
+      this.navCtrl.push(KeyDownloadPage)
+    })
+  }
 
-    hasKey(is_true) {
-        this.has_key = is_true
-    }
+  hasKey(is_true) {
+    this.has_key = is_true
+  }
 
-    registerWithKey() {
-        this.registrar.tryKey(this.existing_key, (success) => {
-            if (success) {
-                this.navCtrl.push(HomePage)
-            } else {
-                ServerComms.errorToast(this.toastCtrl, "this key is not registered")
-            }
-        }, /*invalid key*/ () => {
-            ServerComms.errorToast(this.toastCtrl, "this key is not formatted properly")
-        })
-    }
+  registerWithKey() {
+    this.registrar.tryKey(this.existing_key, (success) => {
+      if (success) {
+        this.navCtrl.setRoot(HomePage)
+      } else {
+        ServerComms.errorToast(this.toastCtrl, "this key is not registered")
+      }
+    }, /*invalid key*/ () => {
+      ServerComms.errorToast(this.toastCtrl, "this key is not formatted properly")
+    })
+  }
 }
