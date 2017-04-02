@@ -79,3 +79,7 @@ ion-app {
 body {
   background: color($app-colors, dark-bg);
 }
+
+textarea {
+  resize: none;
+}

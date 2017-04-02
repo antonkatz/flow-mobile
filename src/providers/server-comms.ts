@@ -18,7 +18,8 @@ export class ServerComms {
   // private static server_port = "8080"
   // private static server_address = "http://" + ServerComms.server_ip + ":" + ServerComms.server_port
   private static server_addresses = [
-    "http://35.163.133.102:8080", "http://192.168.2.14:8080", "http://192.168.2.13:8080", "http://localhost:8080"
+    "http://35.163.133.102:8080"
+    // "http://35.163.133.102:8080", "http://192.168.2.14:8080", "http://192.168.2.13:8080", "http://localhost:8080"
     // "http://localhost:8080"
   ]
   private static address_cycle = 0
@@ -125,8 +126,9 @@ export class ServerComms {
       headers["public_key"] = btoa(pub_key)
       let config: RequestOptionsArgs = {headers: new Headers(headers)}
       let ebody = ServerComms.rsa.parseForServer(payload)
+      let effective_timeout = (timeout ? timeout : ServerComms.global_timeout)
       return this.http.post(url, ebody, config)
-        .timeout(timeout ? timeout : ServerComms.global_timeout)
+        .timeout(effective_timeout)
         .map(response => {
           ServerComms.setSymmetricKey(ServerComms.extractSymmetricKey(response))
           return ServerComms.parseSymmetricallyEncrypted(response)
@@ -134,6 +136,9 @@ export class ServerComms {
           let parsed_error = {}
           // no internet connection
           if (((error instanceof Response) && error.status == 0) || (error.name && error.name === "TimeoutError")) {
+            if (error.name && error.name === "TimeoutError") {
+              console.log("timed out at " + effective_timeout)
+            }
             parsed_error = {
               "error_code": "no_connection", "error_msg": "perhaps you are not connected to the" +
               " internet"

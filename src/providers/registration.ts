@@ -35,7 +35,7 @@ export class Registration {
         ServerComms.errorToast(this.toastCtrl, error["error_msg"])
       }
       callback(false)
-    }, /* force public*/ true, /* timeout for android */ 1000)
+    }, /* force public*/ true, /* timeout for android */ 5000)
   }
 
   tryKey(key: string, callback: (boolean)=>void, invalid_key_callback) {
