@@ -48,7 +48,7 @@ export class WalletPage {
       console.log("wallet page callback")
       cthis.principal = wP.getPrincipal()
       cthis.interest = wP.getInterest()
-      cthis.total_balance = this.principal + wP.getInterest()
+      cthis.total_balance = cthis.principal + cthis.interest
       cthis.interest_display = cthis.interest.toFixed(cthis.interest_digits)
       cthis.total_display = Wallet.displayAmount(cthis.total_balance, cthis.total_digits)
     }

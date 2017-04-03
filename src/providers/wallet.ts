@@ -16,7 +16,6 @@ export class Wallet {
   private callback = null
   private interest_rate = 0
 
-  private identifier = Math.round(Math.random() * 100)
   private interval_id = null
 
   private display_names = {}

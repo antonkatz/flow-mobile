@@ -5,7 +5,6 @@ import "rxjs/add/operator/map";
 import {RSA} from "../app/utils/rsa";
 import {Observable} from "rxjs";
 import aesjs from "aes-js";
-import has = Reflect.has;
 
 /**
  Singleton

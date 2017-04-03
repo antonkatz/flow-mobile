@@ -11,7 +11,7 @@ enableProdMode();
 })
 export class MyApp {
     rootPage:any = GreetingPage;
-  
+
     constructor(platform: Platform) {
       platform.ready().then(() => {
         console.log("platform ready")
