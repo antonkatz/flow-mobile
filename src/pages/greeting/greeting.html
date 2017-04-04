@@ -12,11 +12,12 @@
         said lightly. Please enjoy the audio introduction below:</p>
 
     <div style="text-align: center; margin-top: 1em">
-    <audio controls style="max-width:500px; width: 100%">
+    <audio id="audio" controls style="max-width:500px; width: 100%">
         <source src="/assets/audio/introduction.mp3" type='audio/mp3'/>
         <p>oops... your browser does not support audio files</p>
     </audio>
 
-    <button style="margin-top:1em" ion-button color="primary" [navPush]="register_page">continue</button>
+    <button style="margin-top:1em" ion-button color="primary" (click)="continueToRegistration()">continue</button>
     </div>
+
 </ion-content>

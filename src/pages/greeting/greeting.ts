@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component , ElementRef} from '@angular/core';
 import { NavController, NavParams } from 'ionic-angular';
 import {RegisterPage} from "../register/register";
 
@@ -15,12 +15,13 @@ import {RegisterPage} from "../register/register";
 export class GreetingPage {
   register_page
 
-  constructor(public navCtrl: NavController, public navParams: NavParams) {
+  constructor(public navCtrl: NavController, public navParams: NavParams, public element: ElementRef) {
     this.register_page = RegisterPage
   }
 
-  ionViewDidLoad() {
-    console.log('ionViewDidLoad GreetingPage');
+  continueToRegistration() {
+    let audio = this.element.nativeElement.ownerDocument.getElementById("audio")
+    audio.pause()
+    this.navCtrl.push(this.register_page)
   }
-
 }
