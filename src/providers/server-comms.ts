@@ -17,9 +17,9 @@ export class ServerComms {
   // private static server_port = "8080"
   // private static server_address = "http://" + ServerComms.server_ip + ":" + ServerComms.server_port
   private static server_addresses = [
-    // "http://35.163.133.102:8080"
+    "http://35.163.133.102:8080"
     // "http://35.163.133.102:8080", "http://192.168.2.14:8080", "http://192.168.2.13:8080", "http://localhost:8080"
-    "http://localhost:8080"
+    // "http://localhost:8080"
   ]
   private static address_cycle = 0
   private static server_address;
