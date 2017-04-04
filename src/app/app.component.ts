@@ -10,12 +10,11 @@ enableProdMode();
     templateUrl: 'app.html'
 })
 export class MyApp {
-    rootPage:any = GreetingPage;
+    rootPage:any = MainPage;
 
     constructor(platform: Platform) {
       platform.ready().then(() => {
         console.log("platform ready")
-        this.rootPage = MainPage;
           // Okay, so the platform is ready and our plugins are available.
           // Here you can do any higher level native things you might need.
       });

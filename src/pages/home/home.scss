@@ -33,7 +33,12 @@ page-home {
     //font-weight: bold;
   }
   #offers .description {
+    float:left;
     white-space: normal;
+    color: #8C8C8C;
+  }
+  #offers .display-name {
+    float:left;
   }
   #offers ion-item {
     background: #171e1f;
