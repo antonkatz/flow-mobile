@@ -33,12 +33,12 @@
             <ion-icon class="help" name="help-circle"></ion-icon>
         </ion-list-header>
         <ion-list>
-            <ion-note *ngIf="offers.length == 0" style="text-align: center; padding: 1em; display:block">
+            <ion-note *ngIf="incoming_offers.length == 0" style="text-align: center; padding: 1em; display:block">
                 <ion-icon name="happy"></ion-icon> <br>
                 your slate is clear -- you've payed all who have helped you
             </ion-note>
 
-            <ion-item *ngFor="let offer of offers">
+            <ion-item *ngFor="let offer of incoming_offers">
                 <ion-avatar item-left>
                     <img src="https://www.gravatar.com/avatar/{{md5(offer.from_user_id)}}?s=32&d=identicon&r=PG"/>
                 </ion-avatar>
@@ -58,6 +58,36 @@
                     </button>
                     <button ion-button color="danger" outline (click)="rejectOffer(offer.offer_id)"
                             style="float: left">reject</button>
+                </p>
+            </ion-item>
+        </ion-list>
+
+        <ion-list-header>
+            outgoing invoices
+            <ion-icon class="help" name="help-circle"></ion-icon>
+        </ion-list-header>
+        <ion-list>
+            <ion-note *ngIf="outgoing_offers.length == 0" style="text-align: center; padding: 1em; display:block">
+                <ion-icon name="happy"></ion-icon> <br>
+                your haven't sent out any invoices -- maybe you haven't helped anybody yet?
+            </ion-note>
+
+            <ion-item *ngFor="let offer of outgoing_offers">
+                <ion-avatar item-left>
+                    <img src="https://www.gravatar.com/avatar/{{md5(offer.to_user_id)}}?s=32&d=identicon&r=PG"/>
+                </ion-avatar>
+
+                <p>
+                    <span class="display-name">{{display_names[offer.to_user_id]}}</span>
+                    <span class="amount">{{offer.display_hours}}</span>
+                    <br/>
+                    <span class="description">{{offer.description}}</span>
+                </p>
+
+
+                <p class="options">
+                    <button ion-button color="danger" outline (click)="cancelOffer(offer.offer_id)"
+                            style="float: left">cancel</button>
                 </p>
             </ion-item>
         </ion-list>

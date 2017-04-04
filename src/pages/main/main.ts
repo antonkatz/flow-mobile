@@ -34,8 +34,6 @@ export class MainPage {
     this.connections_page = ConnectionsPage
     this.wallet_page = WalletPage
     this.key_download_page = KeyDownloadPage
-    // this.rootPage = MainPage
-    this.rootPage = GreetingPage
 
     console.log('main page')
     this.storage.ready().then(() => {
@@ -46,7 +44,8 @@ export class MainPage {
           this.rootPage = HomePage
           // this.rootPage = this.key_download_page
         } else {
-          this.rootPage = RegisterPage;
+          this.rootPage = GreetingPage
+          // this.rootPage = RegisterPage;
           // this.navCtrl.setRoot(RegisterPage)
         }
 

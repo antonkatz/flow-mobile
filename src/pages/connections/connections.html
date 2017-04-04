@@ -18,7 +18,7 @@
         <ion-list>
             <ion-list-header>
                 your friends
-                <ion-icon class="help" name="help-circle"></ion-icon>
+                <!--<ion-icon class="help" name="help-circle"></ion-icon>-->
             </ion-list-header>
             <ion-item *ngFor="let con of friends" [navPush]="offer_page" [navParams]="con">
                 <ion-avatar item-left>
@@ -39,7 +39,7 @@
         <ion-list>
             <ion-list-header>
                 friends of friends
-                <ion-icon class="help" name="help-circle"></ion-icon>
+                <!--<ion-icon class="help" name="help-circle"></ion-icon>-->
             </ion-list-header>
             <ng-container *ngFor="let level of fof">
                 <ion-item *ngFor="let con of level" [navPush]="offer_page" [navParams]="con">

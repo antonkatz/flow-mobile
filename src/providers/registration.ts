@@ -14,6 +14,7 @@ import {ToastController} from "ionic-angular";
 @Injectable()
 export class Registration {
   static storage_user_id:string = "user_id"
+  static user_id = ""
 
   constructor(public http: Http, public storage: Storage, public comms: ServerComms, public toastCtrl: ToastController)
   {
@@ -78,6 +79,7 @@ export class Registration {
     this.storage.set(Registration.storage_user_id, id)
     console.log("user id [registration]" + id)
     ServerComms.setUserId(id)
+    Registration.user_id = id
   }
 
   getUserId(): Promise<string> {

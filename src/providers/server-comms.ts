@@ -29,7 +29,7 @@ export class ServerComms {
   private static self_instance: ServerComms = null
   private static rsa = null
   private static user_id = null
-  private static global_timeout = 20000
+  private static global_timeout = 180000
 
   constructor(public http: Http, public storage: Storage) {
     if (ServerComms.self_instance) {
