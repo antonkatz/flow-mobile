@@ -2,7 +2,6 @@ import {Component, enableProdMode} from '@angular/core';
 import {Platform} from 'ionic-angular';
 
 import {MainPage} from "../pages/main/main";
-import {GreetingPage} from "../pages/greeting/greeting";
 
 enableProdMode();
 

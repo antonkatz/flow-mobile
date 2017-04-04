@@ -1,0 +1,17 @@
+page-faq {
+  ion-item {
+    margin-bottom: 1em !important;
+  }
+  ion-item ion-label {
+    display: none;
+  }
+  ion-item h2 {
+    color: color($app-colors, balance);
+    margin-bottom: 0.5em !important;
+    margin-top: 0.3em !important;
+  }
+  ion-item p {
+    color: #8C8C8C !important;
+    font-size: inherit !important;
+  }
+}
