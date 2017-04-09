@@ -16,7 +16,7 @@
 <ion-content padding>
 
     <ion-item>
-        <ion-label color="primary">balance</ion-label>
+        <ion-label color="primary">final balance</ion-label>
         <span clear item-right>{{total_display}}</span>
     </ion-item>
 
@@ -26,7 +26,7 @@
         </ion-col>
         <ion-col width-50>
             <ion-item>
-                <ion-label color="primary" stacked>interest</ion-label>
+                <ion-label color="primary" stacked>interest was</ion-label>
                 <!-- todo. this does not need to be two way -->
                 <ion-input [(ngModel)]="interest_display" disabled="true"></ion-input>
             </ion-item>
