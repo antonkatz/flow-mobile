@@ -15,14 +15,18 @@
 
     <div id="balance">
         <div class = "button" style="display: inline-block; border-radius: 0.1em;" [navPush]="wallet_page">
+            <ion-icon name="add" style = "float: left; margin-right: 0.3em"
+                      *ngIf="principal > 0"></ion-icon>
+            <ion-icon name="remove" style = "float: left; margin-right: 0.3em"
+                      *ngIf="principal < 0"></ion-icon>
             <span style="float:left">{{principal_display}}</span>
             <br>
-            <ion-icon name="add" style = "color: #869635; float: left; margin-right: 0.3em"
-                      *ngIf="interest_balance > 0"></ion-icon>
-            <ion-icon name="remove" style = "color: #869635; float: left; margin-right: 0.3em"
-                      *ngIf="interest_balance < 0"></ion-icon>
+            <ion-icon name="add" style = "color: #869635; float: left; margin-right: 0.3em; clear: both"
+                      *ngIf="interest_pos"></ion-icon>
+            <ion-icon name="remove" style = "color: #869635; float: left; margin-right: 0.3em; clear: both"
+                      *ngIf="!interest_pos"></ion-icon>
             <span style="float: left; color: #869635;">
-                {{abs(interest_balance)}}
+                {{interest_balance}}
             </span>
         </div>
     </div>

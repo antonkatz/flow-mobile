@@ -179,7 +179,7 @@ export class Wallet {
 
   static displayAmount(amount: number, fixto?: number) {
     var suffix = "hours"
-    if (amount == 1) {
+    if (Math.abs(amount) == 1) {
       suffix = "hour"
     }
     let a = amount.toString()

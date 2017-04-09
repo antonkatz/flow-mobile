@@ -21,6 +21,7 @@ export class HomePage {
   principal_display = ""
   interest_digits = 15
   interest_balance: String = ""
+  interest_pos = false
 
   connectionsPage;
   wallet_page;
@@ -76,8 +77,9 @@ export class HomePage {
     return (wP) => {
       console.log("home page wallet callback")
       cthis.principal = wP.getBalance()
-      cthis.principal_display = Wallet.displayAmount(cthis.principal, 2)
-      cthis.interest_balance = wP.getInterest().toFixed(cthis.interest_digits)
+      cthis.principal_display = Wallet.displayAmount(Math.abs(cthis.principal), 2)
+      cthis.interest_balance = Math.abs(wP.getInterest()).toFixed(cthis.interest_digits)
+      cthis.interest_pos = wP.getInterest() >= 0
     }
   }
 
