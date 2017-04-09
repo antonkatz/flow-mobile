@@ -1,8 +1,8 @@
 page-wallet {
-  .amount.outflow {
+  .amount.inflow {
     color: color($app-colors, balance-bright);
   }
-  .amount.inflow {
+  .amount.outflow {
     color: color($colors, primary);
   }
   .amount {

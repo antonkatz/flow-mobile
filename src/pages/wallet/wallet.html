@@ -16,17 +16,13 @@
 <ion-content padding>
 
     <ion-item>
-        <ion-label color="primary">total balance</ion-label>
+        <ion-label color="primary">balance</ion-label>
         <span clear item-right>{{total_display}}</span>
     </ion-item>
 
     <ion-row>
         <ion-col width-50>
-            <ion-item>
-                <ion-label color="primary" stacked>principal</ion-label>
-                <!-- todo. this does not need to be two way -->
-                <ion-input [(ngModel)]="principal" disabled="true"></ion-input>
-            </ion-item>
+
         </ion-col>
         <ion-col width-50>
             <ion-item>
@@ -58,10 +54,14 @@
 
                 <div item-content style="display:flex; justify-content: flex-end; flex-wrap: wrap; flex-basis: 100%">
                     <p style="flex-basis: 100%">
+                        <!--<span *ngIf="tr.from_user_id != user_id" class="display-name">{{tr.from_display_name}}</span>-->
+                        <!--<span *ngIf="tr.to_user_id != user_id" class="display-name">{{tr.to_display_name}}</span>-->
+                        <!--<span *ngIf="tr.from_user_id != user_id" class="amount inflow">+{{tr.amount}}</span>-->
+                        <!--<span *ngIf="tr.to_user_id != user_id" class="amount outflow">-{{tr.amount}}</span>-->
                         <span *ngIf="tr.from_user_id != user_id" class="display-name">{{tr.from_display_name}}</span>
                         <span *ngIf="tr.to_user_id != user_id" class="display-name">{{tr.to_display_name}}</span>
-                        <span *ngIf="tr.from_user_id != user_id" class="amount inflow">+{{tr.amount}}</span>
-                        <span *ngIf="tr.to_user_id != user_id" class="amount outflow">-{{tr.amount}}</span>
+                        <span *ngIf="tr.from_user_id == user_id" class="amount inflow">+{{tr.hours}}</span>
+                        <span *ngIf="tr.to_user_id == user_id" class="amount outflow">-{{tr.hours}}</span>
                     </p>
                     <p>
                         <ion-datetime style="padding:0; opacity:1" displayFormat="DD.MM.YYYY HH:mm" disabled="true"

@@ -21,6 +21,8 @@ export class Wallet {
   private display_names = {}
   private timezone_offset = (new Date()).getTimezoneOffset() * 60 * 1000
 
+  private offers = []
+
   constructor(public comms: ServerComms, public toastCtrl: ToastController) {}
 
   // private debug_timer = (new Date()).getTime()
@@ -50,7 +52,7 @@ export class Wallet {
   }
 
   intervalInterestCalculator() {
-    this.wallet["uncommitted_interest"] += (this.getPrincipal() + this.getInterest()) * (this.interest_rate - 1)
+    this.wallet["uncommitted_interest"] -= this.getBalance() * (1 - this.interest_rate)
   }
 
   setRefresher(callback) {
@@ -60,6 +62,7 @@ export class Wallet {
   setWallet(w) {
     if (w) {
       this.wallet = w
+      this.wallet["transactions"] = this.offers
       this.retrieveDisplayNames()
       this.processDates()
       if (this.callback) {
@@ -133,10 +136,23 @@ export class Wallet {
       let wallet = data["response"]
       console.log("wallet contents", wallet)
       if (wallet) {
-        this.setWallet(wallet)
-        if (callback) {
-          callback()
-        }
+
+        // todo. hack getting offers over transacitons
+        this.comms.sendToServer("/offers/get-completed", null, data => {
+          let r = data["response"]
+          console.log("completed offers retrieved as transactions", r)
+          this.offers = r["offers"]
+
+          this.setWallet(wallet)
+          if (callback) {
+            callback()
+          }
+
+        }, error => {
+          console.log("error during retrieving offers", error);
+          ServerComms.errorToast(this.toastCtrl, error["error_msg"])
+        })
+
       } else {
         ServerComms.errorToast(this.toastCtrl, "we could not load your walletProv")
       }
@@ -148,8 +164,8 @@ export class Wallet {
 
   /* getters */
 
-  getPrincipal() {
-    return this.wallet["principal"]
+  getBalance() {
+    return this.wallet["balance"]
   }
 
   getInterest() {
@@ -158,6 +174,7 @@ export class Wallet {
 
   getTransactions() {
     return this.wallet["transactions"]
+    // return this.offers
   }
 
   static displayAmount(amount: number, fixto?: number) {

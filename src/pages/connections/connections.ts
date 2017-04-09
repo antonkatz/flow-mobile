@@ -18,6 +18,8 @@ export class ConnectionsPage {
   offer_page = CreateOfferPage
   fof = []
   friends = []
+  balances = {}
+  balances_fixto = 2
 
   constructor(public comms: ServerComms, public toastCtrl: ToastController) {
   }
@@ -29,8 +31,19 @@ export class ConnectionsPage {
       this.fof = r["fof"]
       this.friends = r["friends"]
       console.log("connected to friends", this.friends, "and friends of friends", this.fof)
+
+      // looking up their account balances
+      this.comms.sendToServer("/connections/get-balances", null, data => {
+        console.log("balances are", data)
+        // for (let i = 0; i < data.size, )
+        data.forEach(b => this.balances[b[0]] = (b[1]).toFixed(this.balances_fixto))
+      }, error => {
+        console.log("error during a connections' balances lookup", error);
+        ServerComms.errorToast(this.toastCtrl, error["error_msg"])
+      })
+
     }, error => {
-      console.log("error during a connections lookup", error);
+      console.log("error during a connections' balances lookup", error);
       ServerComms.errorToast(this.toastCtrl, error["error_msg"])
     })
   }

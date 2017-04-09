@@ -70,7 +70,7 @@ export class ServerComms {
   }
 
   /** endpoint should have leading slash */
-  sendToServer(endpoint: string, payload: any, success_callback: (data: {}) => void,
+  sendToServer(endpoint: string, payload: any, success_callback: (data) => void,
                error_callback?: (er: any) => void, force_public?: boolean, timeout?) {
     let url = ServerComms.server_address + endpoint
     let json_payload = JSON.stringify(payload)

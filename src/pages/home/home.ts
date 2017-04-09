@@ -75,8 +75,8 @@ export class HomePage {
     let cthis = this
     return (wP) => {
       console.log("home page wallet callback")
-      cthis.principal = wP.getPrincipal()
-      cthis.principal_display = Wallet.displayAmount(cthis.principal)
+      cthis.principal = wP.getBalance()
+      cthis.principal_display = Wallet.displayAmount(cthis.principal, 2)
       cthis.interest_balance = wP.getInterest().toFixed(cthis.interest_digits)
     }
   }
@@ -85,11 +85,11 @@ export class HomePage {
     let offer = this.incoming_offers.filter((o) => o["offer_id"] == id)[0]
     let hours = offer["hours"]
     let from_user = this.display_names[offer["from_user_id"]]
-    let prompt_text = "you are confirming these " + Wallet.displayAmount(hours)
+    let prompt_text = "you are confirming transfer of " + Wallet.displayAmount(hours)
 
     let cthis = this
     let toast_msg_func = (resp) => {
-      return "successfully transferred " + Wallet.displayAmount(hours) + " from '" + from_user + "'"
+      return "successfully transferred " + Wallet.displayAmount(hours) + " to '" + from_user + "'"
     }
     let callback = (resp) => {
       cthis.incoming_offers = cthis.incoming_offers.filter(o => o["offer_id"] != offer['offer_id'])
@@ -110,11 +110,11 @@ export class HomePage {
   rejectOffer(id) {
     let user_id = this.incoming_offers.find(o => o['offer_id'] == id)["from_user_id"]
     let display_name = this.display_names[user_id]
-    let prompt_text = "you are rejecting offer from '" + display_name + "'"
+    let prompt_text = "you are rejecting invoice from '" + display_name + "'"
     let cthis = this
 
     let toast_msg_func = (resp) => {
-      return "offer from '" + display_name + "' is rejected"
+      return "invoice from '" + display_name + "' is rejected"
     }
     let callback = (resp) => {
       cthis.offerRemoveFromResponse(resp)
@@ -129,11 +129,11 @@ export class HomePage {
   cancelOffer(id) {
     let user_id = this.outgoing_offers.find(o => o['offer_id'] == id)["to_user_id"]
     let display_name = this.display_names[user_id]
-    let prompt_text = "you are canceling offer to '" + display_name + "'"
+    let prompt_text = "you are canceling invoice to '" + display_name + "'"
     let cthis = this
 
     let toast_msg_func = (resp) => {
-      return "offer to '" + display_name + "' is cancelled"
+      return "invoice to '" + display_name + "' is cancelled"
     }
     let callback = (resp) => {
       cthis.offerRemoveFromResponse(resp)
@@ -172,4 +172,6 @@ export class HomePage {
   md5(what: any) {
     return md5(what)
   }
+
+  abs(x) {return Math.abs(x)}
 }

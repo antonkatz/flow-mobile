@@ -15,7 +15,7 @@ import {Registration} from "../../providers/registration";
   templateUrl: 'wallet.html'
 })
 export class WalletPage {
-  principal = 0
+  balance = 0
   total_balance = 0
   total_display = ""
   interest_digits = 7
@@ -46,11 +46,10 @@ export class WalletPage {
     let cthis = this
     return (wP) => {
       console.log("wallet page callback")
-      cthis.principal = wP.getPrincipal()
+      cthis.balance = wP.getBalance()
       cthis.interest = wP.getInterest()
-      cthis.total_balance = cthis.principal + cthis.interest
       cthis.interest_display = cthis.interest.toFixed(cthis.interest_digits)
-      cthis.total_display = Wallet.displayAmount(cthis.total_balance, cthis.total_digits)
+      cthis.total_display = Wallet.displayAmount(cthis.balance + this.interest, cthis.total_digits)
     }
   }
 

@@ -16,11 +16,15 @@
     <div id="balance">
         <div class = "button" style="display: inline-block; border-radius: 0.1em;" [navPush]="wallet_page">
             <span style="float:left">{{principal_display}}</span>
-            <span class="note" style="float:right">owed friends</span>
             <br>
-            <span style="float: left">+ {{interest_balance}}</span>
+            <ion-icon name="add" style = "color: #869635; float: left; margin-right: 0.3em"
+                      *ngIf="interest_balance > 0"></ion-icon>
+            <ion-icon name="remove" style = "color: #869635; float: left; margin-right: 0.3em"
+                      *ngIf="interest_balance < 0"></ion-icon>
+            <span style="float: left; color: #869635;">
+                {{abs(interest_balance)}}
+            </span>
         </div>
-        <span><ion-icon class="help" name="help-circle"></ion-icon></span>
     </div>
 
     <p text-center>
@@ -30,7 +34,6 @@
     <div id="offers">
         <ion-list-header>
             incoming invoices
-            <ion-icon class="help" name="help-circle"></ion-icon>
         </ion-list-header>
         <ion-list>
             <ion-note *ngIf="incoming_offers.length == 0" style="text-align: center; padding: 1em; display:block">
@@ -64,7 +67,6 @@
 
         <ion-list-header>
             outgoing invoices
-            <ion-icon class="help" name="help-circle"></ion-icon>
         </ion-list-header>
         <ion-list>
             <ion-note *ngIf="outgoing_offers.length == 0" style="text-align: center; padding: 1em; display:block">

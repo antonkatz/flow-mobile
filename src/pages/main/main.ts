@@ -8,9 +8,7 @@ import {Registration} from "../../providers/registration";
 import {ConnectionsPage} from "../connections/connections";
 import {WalletPage} from "../wallet/wallet";
 import { Storage } from '@ionic/storage';
-import {GreetingPage} from "../greeting/greeting";
 import {KeyDownloadPage} from "../key-download/key-download";
-import {FaqPage} from "../faq/faq";
 
 /*
   Generated class for the Main page.
@@ -36,7 +34,7 @@ export class MainPage {
     this.connections_page = ConnectionsPage
     this.wallet_page = WalletPage
     this.key_download_page = KeyDownloadPage
-    this.faq_page = FaqPage
+    // this.faq_page = FaqPage
 
     console.log('main page')
     this.storage.ready().then(() => {
@@ -47,8 +45,8 @@ export class MainPage {
           this.rootPage = HomePage
           // this.rootPage = this.faq_page
         } else {
-          this.rootPage = GreetingPage
-          // this.rootPage = RegisterPage;
+          // this.rootPage = GreetingPage
+          this.rootPage = RegisterPage;
           // this.navCtrl.setRoot(RegisterPage)
         }
 

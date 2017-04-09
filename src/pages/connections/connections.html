@@ -26,7 +26,10 @@
                 </ion-avatar>
 
                 <p class="friend-line-one">
+                    <span>
                     <span class="display-name">{{con.display_name}}</span>
+                    <span class="user-balance">({{balances[con.user_id]}})</span>
+                    </span>
                     <button ion-button color="secondary" outline>
                         invoice
                     </button>
@@ -48,7 +51,10 @@
                     </ion-avatar>
 
                     <p class="friend-line-one">
+                        <span>
                         <span class="display-name">{{con.display_name}}</span>
+                        <span class="user-balance">({{balances[con.user_id]}})</span>
+                        </span>
                         <button ion-button color="secondary" outline>
                             invoice
                         </button>
