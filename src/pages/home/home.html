@@ -42,7 +42,7 @@
         <ion-list>
             <ion-note *ngIf="incoming_offers.length == 0" style="text-align: center; padding: 1em; display:block">
                 <ion-icon name="happy"></ion-icon> <br>
-                your slate is clear -- you've payed all who have helped you
+                your slate is clear -- you've payed all invoices
             </ion-note>
 
             <ion-item *ngFor="let offer of incoming_offers">
@@ -74,7 +74,7 @@
         </ion-list-header>
         <ion-list>
             <ion-note *ngIf="outgoing_offers.length == 0" style="text-align: center; padding: 1em; display:block">
-                your haven't sent out any invoices -- maybe you haven't helped anybody yet?
+                you haven't sent out any invoices that have not been payed
             </ion-note>
 
             <ion-item *ngFor="let offer of outgoing_offers">
