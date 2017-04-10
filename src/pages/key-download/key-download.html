@@ -24,7 +24,8 @@
         Our aim is to be more secure than a bank, thus we have to automatically generate a password for you
         <br><br>
         For advanced users only <ion-icon name="happy" style="font-size: 1.2em"></ion-icon>:<br>
-        We also have big plans in store, requiring everybody to have an RSA key pair
+        We also have big plans in store, requiring everybody to have an RSA key pair<br>
+        You can see the key below
       </p>
     </div>
   </ion-item>
@@ -34,6 +35,17 @@
       download private key
     </a>
   </p>
+
+  <ion-item>
+    <div item-content style="max-width: 550px; word-wrap: break-word;
+    -o-user-select: text;
+    -moz-user-select: text;
+    -webkit-user-select: text;
+    user-select: text;">
+      <p>{{private_key}}</p>
+
+    </div>
+  </ion-item>
 
 
 </ion-content>

@@ -16,8 +16,9 @@ import {DomSanitizer} from "@angular/platform-browser";
 })
 export class KeyDownloadPage {
   private rsa
-  uri_base = "data:application/octet-stream;charset=UTF-8;base64,"
+  uri_base = "data:text/plain;charset=UTF-8;base64,"
   private_key_data_uri:any = ""
+  private_key=""
 
   constructor(public navCtrl: NavController, public storage: Storage,
               public sanitizer: DomSanitizer) {
@@ -26,6 +27,7 @@ export class KeyDownloadPage {
 
   ionViewWillLoad() {
     this.rsa.getPrivateKey().then((key) => {
+      this.private_key = key
       this.private_key_data_uri = this.sanitizer.bypassSecurityTrustUrl(this.uri_base + btoa(key))
     })
   }
